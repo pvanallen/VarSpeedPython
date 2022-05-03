@@ -32,7 +32,7 @@ To set up on CircuitPython:
 
 ## Code Examples - non-CircuitPython
 
-* **[move_simple.py](../exemples/move_simplepy)** — a non-CircuitPython dependent example that can be run in any Python environment
+* **[move_simple.py](examples/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **sequence_simple.py** — a non-CircuitPython dependent example that can be run in any Python environment
 
 ## Code Examples - CircuitPython
