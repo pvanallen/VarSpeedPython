@@ -33,15 +33,15 @@ To set up on CircuitPython:
 ## Code Examples - non-CircuitPython
 
 * **[move_simple.py](examples/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
-* **sequence_simple.py** — a non-CircuitPython dependent example that can be run in any Python environment
+* **[sequence_simple.py](examples/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 
 ## Code Examples - CircuitPython
 
-* **move_simple_led.py** — changes the brightness of an LED
-* **move_simple_servo.py** — changes the angle of a servo
-* **sequence_simple_servo.py** — runs a sequence of moves for a servo
-* **two_sequences_at_once_led.py** — shows how to do two sequences simultaneously, for example dimming two LEDs in opposite directions
-* **two_sequences_at_once_servo.py** — runs different sequences for different servos simultaneously
+* **[move_simple_led.py](examples/move_simple_led.py)** — changes the brightness of an LED
+* **[move_simple_servo.py](examples/move_simple_servo.py)** — changes the angle of a servo
+* **[sequence_simple_servo.py](examples/sequence_simple_servo.py)** — runs a sequence of moves for a servo
+* **[two_sequences_at_once_led.py](examples/two_sequences_at_once_led.py)** — shows how to do two sequences simultaneously, for example dimming two LEDs in opposite directions
+* **[two_sequences_at_once_servo.py](examples/two_sequences_at_once_servo.py)** — runs different sequences for different servos simultaneously
 
 ## Easing Types
 
