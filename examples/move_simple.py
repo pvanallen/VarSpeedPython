@@ -1,6 +1,6 @@
 # move_simple.py
 #
-# a non-hardware dependant example of using the VarSpeedPython class
+# a non-hardware dependent example of using the VarSpeedPython class
 # to ramp a value from one value to another
 #
 import time

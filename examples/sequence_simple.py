@@ -1,6 +1,6 @@
 # sequence_simple.py
 #
-# a non-hardware dependant example of using the VarSpeedPython class
+# a non-hardware dependent example of using the VarSpeedPython class
 # to have a series of moves in a sequence
 #
 import time
