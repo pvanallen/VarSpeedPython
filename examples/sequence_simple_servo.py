@@ -1,3 +1,7 @@
+# sequence_simple_servo.py
+#
+# an example of using the VarSpeedPython class to have a series of moves in a sequence
+#
 import time
 import board
 import pwmio
@@ -11,9 +15,9 @@ MAX = 180
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=MAX, result="int")
+vs = Vspeed(init_position=MIN, result="int")
 # make the output of the function be within the bounds set
-vs.set_bounds(lower_bound=min, upper_bound=max)
+vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 # create a PWMOut object on Pin D2.
 pwm = pwmio.PWMOut(board.D2, duty_cycle=2 ** 15, frequency=50)
@@ -22,11 +26,11 @@ pwm = pwmio.PWMOut(board.D2, duty_cycle=2 ** 15, frequency=50)
 my_servo = servo.Servo(pwm)
 
 # set the servo to a known starting point
-my_servo.angle = vs.position
+my_servo.angle = MIN
 
 my_sequence = [(MAX / 2, 2, 10, "QuadEaseIn"),
-               (MAX, 0.5, 9, "QuadEaseOut"),
-               (MIN, 0.5, 8, "SineEaseInOut")]
+               (MIN, 2.0, 10, "QuadEaseOut"),
+               (MAX, 2.0, 10, "SineEaseInOut")]
 
 running = True
 while running:
@@ -39,7 +43,7 @@ while running:
     #         if 1, play once
     #         if >1, loop sequence that many times
     #
-    position, running, changed = vs.sequence(sequence=my_sequence, loop_max=1)
+    position, running, changed = vs.sequence(sequence=my_sequence, loop_max=2)
 
     #print(position, running, changed)
     if changed:

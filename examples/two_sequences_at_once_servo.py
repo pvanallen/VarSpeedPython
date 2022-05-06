@@ -1,3 +1,7 @@
+# two_sequences_at_once_servo.py
+#
+# an example of how to use two sequences at the same time without blocking either one
+#
 import time
 import board
 import pwmio
@@ -22,9 +26,9 @@ my_servo2 = servo.Servo(pwm2)
 # result = float, int
 vs1 = Vspeed(init_position=MIN, result="int")
 # make the output of the function be within the bounds set
-vs1.set_bounds(lower_bound=MIN, upper_bound=max)
+vs1.set_bounds(lower_bound=MIN, upper_bound=MAX)
 vs2 = Vspeed(init_position=MAX, result="int")
-vs2.set_bounds(lower_bound=MIN, upper_bound=max)
+vs2.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 # set the servo to a known starting point
 my_servo1.angle = vs1.position

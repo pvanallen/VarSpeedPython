@@ -1,3 +1,8 @@
+# sequence_simple.py
+#
+# a non-hardware dependant example of using the VarSpeedPython class
+# to have a series of moves in a sequence
+#
 import time
 
 from varspeed import Vspeed
@@ -9,13 +14,13 @@ MAX = 180.0
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=max, result="int")
+vs = Vspeed(init_position=MAX, result="int")
 # make the output of the function be within the bounds set
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 my_sequence = [(MAX / 2, 2, 10, "QuadEaseIn"),
-               (MAX, 0.5, 9, "QuadEaseOut"),
-               (MIN, 0.5, 8, "SineEaseInOut")]
+               (MIN, 2.0, 10, "QuadEaseOut"),
+               (MAX, 2.0, 10, "SineEaseInOut")]
 
 running = True
 #print("starting  position",vs.position)

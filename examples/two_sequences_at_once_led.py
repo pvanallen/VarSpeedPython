@@ -1,3 +1,7 @@
+# two_sequences_at_once_led.py
+#
+# an example of how to use two sequences at the same time without blocking either one
+#
 import board
 import digitalio
 import pwmio
@@ -18,20 +22,20 @@ led2 = pwmio.PWMOut(board.D4, frequency=5000, duty_cycle=0)
 # init_position = initial start position
 # result = float, int
 vs1 = Vspeed(init_position=MIN, result="int")
-# make the output of the function be within the bounds set
-vs1.set_bounds(lower_bound=MIN, upper_bound=max)
 vs2 = Vspeed(init_position=MAX, result="int")
-vs2.set_bounds(lower_bound=MIN, upper_bound=max)
+# make the output of the function be within the bounds set
+vs1.set_bounds(lower_bound=MIN, upper_bound=MAX)
+vs2.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 # set the LED to a known starting point
 led1.duty_cycle = vs1.position
 led2.duty_cycle = vs2.position
 
-my_sequence1 = [(MIN, 1, 100, "QuadEaseIn"),
-                (MAX, 1, 100, "QuadEaseOut")]
+my_sequence1 = [(MIN, 1.0, 10, "QuadEaseIn"),
+                (MAX, 1.0, 10, "QuadEaseOut")]
 
-my_sequence2 = [(MAX, 1, 100, "QuadEaseOut"),
-                (MIN, 1, 100, "QuadEaseIn")]
+my_sequence2 = [(MAX, 1.0, 10, "QuadEaseOut"),
+                (MIN, 1.0, 10, "SineEaseInOut")]
 
 running1 = True
 running2 = True
@@ -50,7 +54,8 @@ while running1 and running2:
     if changed1:
         #print(f'Sequence Num: {vs1.seq_pos}, Step: {vs1.step}, Position: {position1}')
         led1.duty_cycle = position1
-        position2, running2, changed2 = vs2.sequence(
+
+    position2, running2, changed2 = vs2.sequence(
             sequence=my_sequence2, loop_max=0)
 
     if changed2:

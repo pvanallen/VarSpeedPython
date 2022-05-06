@@ -1,3 +1,7 @@
+# move_simple_servo.py
+#
+# changes the position of a servo over time
+#
 import time
 import board
 import pwmio
@@ -11,7 +15,7 @@ MAX = 180
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=max, result="int")
+vs = Vspeed(init_position=MIN, result="int")
 # make the output of the function be within the bounds set
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
@@ -21,13 +25,12 @@ pwm = pwmio.PWMOut(board.D4, duty_cycle=2 ** 15, frequency=50)
 # Create a servo object
 my_servo = servo.Servo(pwm)
 
+print(f'Paused for 5 seconds at {MIN}...')
 # set the servo to a known starting point
-my_servo.angle = vs.position
-
-print(f'Paused at {vs.position}...')
+my_servo.angle = MIN
 time.sleep(5)
 
-print(f'Moving to {min}...')
+print(f'Moving to {MIN}...')
 running = True
 while running:
     # move(new_position,time_secs of move,steps in move,easing function)

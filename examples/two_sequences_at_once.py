@@ -1,3 +1,7 @@
+# two_sequences_at_once.py
+#
+# runs two sequences in parallel without interfering with each another
+#
 import time
 
 from varspeed import Vspeed
@@ -13,11 +17,11 @@ vs1 = Vspeed(init_position=MAX, result="int")
 vs2 = Vspeed(init_position=MAX, result="int")
 
 # create the sequences
-my_sequence1 = [(0, 0.5, 10, "QuadEaseIn"),
-                (180, 0.5, 10, "QuadEaseOut")]
+my_sequence1 = [(MIN, 1.0, 10, "QuadEaseIn"),
+                (MAX, 1.0, 10, "QuadEaseOut")]
 
-my_sequence2 = [(180, 0.5, 10, "QuadEaseOut"),
-                (0, 0.5, 10, "SineEaseInOut")]
+my_sequence2 = [(MAX, 1.0, 10, "QuadEaseOut"),
+                (MIN, 1.0, 10, "SineEaseInOut")]
 
 running1 = True
 running2 = True
