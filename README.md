@@ -3,7 +3,7 @@
 ## Description
 This Python library is descended from the VarspeedServo library (https://github.com/netlabtoolkit/VarSpeedServo), originally written for the Arduino in C++ (which was itself built on an early Arduino servo library). Unlike the old Arduino library, VarSpeedPython is not tied to servos, and can be used more generally for timed moves from one value to another. It is also **not** bound to any processor architecture with hardware interrupts etc.
 
-The library is designed for projects that need to control values over time. For example, in setting the new angle of a servo in 1.5 seconds, setting the brightness of an LED by fading up, or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move. It also provides a function for running sequences of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
+The library is designed for projects that need to control values over time. For example: setting the new angle of a servo in 1.5 seconds; setting the brightness of an LED by fading up; or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move. It also provides a function for running sequences of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
 
 VarSpeedPython objects are designed to be called repeatedly from within an event loop and do not block execution.
 
