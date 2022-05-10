@@ -1,4 +1,12 @@
 # VarSpeedPython library #
+
+## Description
+This Python library is descended from the VarspeedServo library (https://github.com/netlabtoolkit/VarSpeedServo), originally written for the Arduino in C++ (which was itself built on an early Arduino servo library). Unlike the old Arduino library, VarSpeedPython is not tied to servos, and can be used more generally for timed moves from one value to another. It is also **not** bound to any processor architecture with hardware interrupts etc.
+
+The library is designed for projects that need to control values over time. For example, in setting the new angle of a servo in 1.5 seconds, setting the brightness of an LED by fading up, or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move. It also provides a function for running sequences of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
+
+VarSpeedPython objects are designed to be called repeatedly from within an event loop and do not block execution.
+
 <!-- TOC START min:2 max:2 link:true asterisk:false update:true -->
 - [Description](#description)
 - [Circuit Python Setup](#circuit-python-setup)
@@ -14,13 +22,6 @@
 - [set_position](#set_position)
 - [set_bounds](#set_bounds)
 <!-- TOC END -->
-
-## Description
-This Python library is decended from the VarspeedServo library (https://github.com/netlabtoolkit/VarSpeedServo), originally written for the Arduino in C++. Unlike the old Arduino library, VarSpeedPython is not tied to servos, and can be used more generally for timed moves from one value to another. It is also not bound to any processor architecture with hardware interrupts etc.
-
-The library is designed for projects that need to control values over time. For example, in setting the angle of a servo, setting the brightness of an LED, or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move. It also provides a function for running sequences of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
-
-VarSpeedPython objects are designed to be called repeatedly from within an event loop and do not block execution.
 
 ## Circuit Python Setup
 
@@ -41,13 +42,13 @@ To set up on CircuitPython:
 * **[move_simple_servo.py](examples/move_simple_servo.py)** — changes the angle of a servo
 * **[sequence_simple_servo.py](examples/sequence_simple_servo.py)** — runs a sequence of moves for a servo
 * **[two_sequences_at_once_led.py](examples/two_sequences_at_once_led.py)** — shows how to do two sequences simultaneously, for example dimming two LEDs in opposite directions
-* **[two_sequences_at_once_servo.py](examples/two_sequences_at_once_servo.py)** — runs different sequences for different servos simultaneously
+* **[two_sequences_at_once_servo.py](examples/two_sequences_at_once_servo.py)** — runs different sequences for two servos simultaneously
 
 ## Easing Types
 
-For any move (even within a sequence), you can set an easing function using the following easing functions:
+For any move (even within a sequence), you can set an easing function using the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see https://easings.net. For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
 
-* LinearInOut
+* LinearInOut (essentially no easing)
 * QuadEaseInOut, QuadEaseIn, QuadEaseOut
 * CubicEaseIn, CubicEaseOut, CubicEaseInOut
 * QuarticEaseIn, QuarticEaseOut, QuarticEaseInOut
@@ -66,7 +67,7 @@ class Vspeed():
 
 ---
 
-Provides an non-blocking object that can be called repeatedly with the move() and sequence() functions to generate a timed series of values from a current position to a new position(s)
+Provides a non-blocking object that can be called repeatedly from an event loop with the move() and sequence() functions to generate a timed series of values from a current position to a new position(s)
 
 ## init
 ```python
@@ -75,14 +76,14 @@ def __init__(self, init_position = 0, result = "int"):
 
 ---
 
-Creates and initialzes a Vspeed object.
+Creates and initializes a Vspeed object.
 
 ### Args
 * **init_position** (int/float) : sets the initial position of the object.
 * **result** (string = "int" or "float") : sets the type of the returned position.
 
 ### Returns
-* **object**  : returns a varspeed object
+* **object**  : returns a Vspeed object
 
 
 ## move
@@ -102,7 +103,7 @@ Generates a series of values that transition from the current position to a new_
 
 ### Returns
 * **position** (int or float) : each new position, marked by changed being True
-* **running** (Boolean) : if true there are more steps to go in the transition
+* **running** (Boolean) : if true there are more steps to go in the transition/move
 * **changed** (Boolean) : indicates if the latest value is different from the previous value
 
 ## sequence
@@ -116,11 +117,11 @@ Creates a series of values in a sequence of moves as specified in the sequence a
 
 ### Args
 * **sequence** (array of tuples) : perform a sequence of moves (position,time,steps,easing) in the array.
-* **loop_max** (int) : how many time to loop the sequence, zero means loop forever.
+* **loop_max** (int) : how many times to loop the sequence, zero means loop forever.
 
 ### Returns
 * **position** (int or float) : each new position, marked by changed being True
-* **running** (Boolean) : if true there are more steps to go in the transition
+* **running** (Boolean) : if true there are more steps to go in the transition/move
 * **changed** (Boolean) : indicates if the latest position value is different from the previous value
 
 ## sequence_change_seq_num
