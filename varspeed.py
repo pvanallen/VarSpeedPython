@@ -5,7 +5,7 @@ class Vspeed():
   """Provides an non-blocking object that can be called repeatedly with the move() and sequence() functions to generate a timed series of values from a current position to a new position(s)
   """
 
-  def __init__(self, init_position = 0, result = "int"):
+  def __init__(self, init_position=0, result="int", debug=False):
     """Creates and initialzes a varspeed object.
 
     Args:
@@ -40,6 +40,14 @@ class Vspeed():
     self.seq_loop_max = 1
     self.seq_loop_count = 0
 
+    # Debug attribute
+    self.debug = debug
+
+  def debug_print(self, *args):
+      """Helper function to print debug messages if debug mode is enabled."""
+      if self.debug:
+          print(*args)
+
   def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut"):
     """Generates a series of values that transition from the current position to a new_position
 
@@ -56,7 +64,7 @@ class Vspeed():
 
     """
     if not self.started or new_position != self.new_position:
-      # print("new move")
+      # self.debug_print("new move")
       self.new_position = new_position
       #self.last_position = self.position
       self.start_time = time.monotonic()
@@ -79,7 +87,7 @@ class Vspeed():
     if diff_time > self.step_delay:
       # time to change
       self.step += 1
-      # print("new step",self.step,diff_time,self.step_delay)
+      # self.debug_print("new step",self.step,diff_time,self.step_delay)
       self.start_time = time.monotonic()
       self.position = self.ease(self.step)
       # are we there yet?
@@ -89,7 +97,7 @@ class Vspeed():
         self.position = self.new_position
         running = False
         self.started = False
-        # print("end of MOVE")
+        # self.debug_print("end of MOVE")
     else:
       changed = True
 
@@ -143,14 +151,14 @@ class Vspeed():
           if self.loop_count + 1 < self.seq_loop_max:
               self.seq_pos = 0
               self.loop_count += 1
-              print("LOOP",self.loop_count + 1,"of",self.seq_loop_max)
+              self.debug_print("LOOP",self.loop_count + 1,"of",self.seq_loop_max)
           elif self.seq_loop_max == 0: # loop forever
               self.seq_pos = 0
               self.loop_count += 1
-              print("LOOP",self.loop_count + 1,"of forever")
+              self.debug_print("LOOP",self.loop_count + 1,"of forever")
           else:
             return position, False, False
-        print("START sequence move",self.seq_pos,sequence[self.seq_pos])
+        self.debug_print("START sequence move",self.seq_pos,sequence[self.seq_pos])
         self.increment_seq_num = False
 
       position, running, changed = self.move(
@@ -161,7 +169,7 @@ class Vspeed():
 
       if not running: # finished with move
         self.increment_seq_num = True
-        # print("FINISHED sequence move",self.seq_pos)
+        # self.debug_print("FINISHED sequence move",self.seq_pos)
       if changed:
         return position,True,True
 
