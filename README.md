@@ -71,7 +71,7 @@ Provides a non-blocking object that can be called repeatedly from an event loop 
 
 ## init
 ```python
-def __init__(self, init_position = 0, result = "int"):
+def __init__(self, init_position = 0, result = "int", debug=False):
 ```
 
 ---
@@ -81,6 +81,7 @@ Creates and initializes a Vspeed object.
 ### Args
 * **init_position** (int/float) : sets the initial position of the object.
 * **result** (string = "int" or "float") : sets the type of the returned position.
+* **debug** (boolean) : if set to True enables debug print statements.
 
 ### Returns
 * **object**  : returns a Vspeed object
