@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2024 Jerry de Vos and Philip van Allen at TU Delft
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "setuptools-scm",
+]
+
+[project]
+name = "varspeedpython"
+description = "VarSpeedPython"
+version = "0.0.0+auto.0"
+
+[tool.setuptools]
+packages = ["varspeed"]
