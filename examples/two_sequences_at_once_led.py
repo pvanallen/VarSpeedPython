@@ -14,15 +14,16 @@ MAX = 55000  # higher than this isn't much brighter
 
 # create a PWMOut object on Pin D2
 led1 = pwmio.PWMOut(board.D2, frequency=5000, duty_cycle=0)
-# create a PWMOut object on Pin D4
-led2 = pwmio.PWMOut(board.D4, frequency=5000, duty_cycle=0)
+# create a PWMOut object on Pin D3
+led2 = pwmio.PWMOut(board.D3, frequency=5000, duty_cycle=0)
 
 # set up the varspeed objects
 #
 # init_position = initial start position
 # result = float, int
-vs1 = Vspeed(init_position=MIN, result="int")
-vs2 = Vspeed(init_position=MAX, result="int")
+# debug = False, True # set if varspeed will output debug info
+vs1 = Vspeed(init_position=MIN, result="int", debug=False)
+vs2 = Vspeed(init_position=MAX, result="int", debug=False)
 # make the output of the function be within the bounds set
 vs1.set_bounds(lower_bound=MIN, upper_bound=MAX)
 vs2.set_bounds(lower_bound=MIN, upper_bound=MAX)

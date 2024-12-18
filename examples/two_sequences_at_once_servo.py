@@ -9,10 +9,10 @@ from adafruit_motor import servo
 from varspeed import Vspeed
 
 MIN = 20
-MAX = 160
+MAX = 180
 
-# create a PWMOut object on Pin D2
-pwm1 = pwmio.PWMOut(board.D2, duty_cycle=2 ** 15, frequency=50)
+# create a PWMOut object on Pin D13
+pwm1 = pwmio.PWMOut(board.D13, duty_cycle=2 ** 15, frequency=50)
 # create a PWMOut object on Pin D4
 pwm2 = pwmio.PWMOut(board.D4, duty_cycle=2 ** 15, frequency=50)
 
@@ -24,10 +24,11 @@ my_servo2 = servo.Servo(pwm2)
 #
 # init_position = initial start position
 # result = float, int
-vs1 = Vspeed(init_position=MIN, result="int")
+# debug = False, True # set if varspeed will output debug info
+vs1 = Vspeed(init_position=MIN, result="int", debug=False)
 # make the output of the function be within the bounds set
 vs1.set_bounds(lower_bound=MIN, upper_bound=MAX)
-vs2 = Vspeed(init_position=MAX, result="int")
+vs2 = Vspeed(init_position=MAX, result="int", debug=False)
 vs2.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 # set the servo to a known starting point

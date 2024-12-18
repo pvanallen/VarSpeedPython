@@ -15,12 +15,13 @@ MAX = 180
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=MIN, result="int")
+# debug = False, True # set if varspeed will output debug info
+vs = Vspeed(init_position=MIN, result="int", debug=True)
 # make the output of the function be within the bounds set
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
-# create a PWMOut object on Pin D2.
-pwm = pwmio.PWMOut(board.D2, duty_cycle=2 ** 15, frequency=50)
+# create a PWMOut object on Pin D13.
+pwm = pwmio.PWMOut(board.D13, duty_cycle=2 ** 15, frequency=50)
 
 # Create a servo object, my_servo.
 my_servo = servo.Servo(pwm)
@@ -28,9 +29,9 @@ my_servo = servo.Servo(pwm)
 # set the servo to a known starting point
 my_servo.angle = MIN
 
-my_sequence = [(MAX / 2, 2, 10, "QuadEaseIn"),
-               (MIN, 2.0, 10, "QuadEaseOut"),
-               (MAX, 2.0, 10, "SineEaseInOut")]
+my_sequence = [(MAX / 2, 2.0, 100, "QuadEaseIn"),
+               (MIN, 2.0, 100, "QuadEaseOut"),
+               (MAX, 2.0, 100, "SineEaseInOut")]
 
 running = True
 while running:
@@ -47,6 +48,6 @@ while running:
 
     #print(position, running, changed)
     if changed:
-        print(
-            f'Sequence Num: {vs.seq_pos}, Step: {vs.step}, Position: {position}')
+        # print(
+            # f'Sequence Num: {vs.seq_pos}, Step: {vs.step}, Position: {position}')
         my_servo.angle = position

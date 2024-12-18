@@ -15,12 +15,13 @@ MAX = 180
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=MIN, result="int")
-# make the output of the function be within the bounds set
+# debug = False, True # set if varspeed will output debug info
+vs = Vspeed(init_position=MIN, result="int", debug=False)
+# make the output of the function be within the MIN MAX bounds set
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
 # create a PWMOut object on Pin D4
-pwm = pwmio.PWMOut(board.D4, duty_cycle=2 ** 15, frequency=50)
+pwm = pwmio.PWMOut(board.D13, duty_cycle=2 ** 15, frequency=50)
 
 # Create a servo object
 my_servo = servo.Servo(pwm)
@@ -30,7 +31,7 @@ print(f'Paused for 5 seconds at {MIN}...')
 my_servo.angle = MIN
 time.sleep(5)
 
-print(f'Moving to {MIN}...')
+print(f'Moving to {MAX}...')
 running = True
 while running:
     # move(new_position,time_secs of move,steps in move,easing function)
@@ -41,5 +42,4 @@ while running:
     position, running, changed = vs.move(
         new_position=MAX, time_secs=2, steps=180, easing="CubicEaseInOut")
     if changed:  # only act if the output changed
-        print(f'Step: {vs.step}, Position: {position}')
         my_servo.angle = position

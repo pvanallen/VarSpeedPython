@@ -8,19 +8,20 @@ import time
 from varspeed import Vspeed
 
 MIN = 0.0
-MAX = 180.0
+MAX = 100.0
 
 # set up the varspeed object
 #
 # init_position = initial start position
 # result = float, int
-vs = Vspeed(init_position=MAX, result="int")
+# debug = False, True # set if varspeed will output debug info
+vs = Vspeed(init_position=MAX, result="int", debug=False)
 # make the output of the function be within the bounds set
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 
-my_sequence = [(MAX / 2, 2, 10, "QuadEaseIn"),
-               (MIN, 2.0, 10, "QuadEaseOut"),
-               (MAX, 2.0, 10, "SineEaseInOut")]
+my_sequence = [(MAX / 2, 3.0, 10, "QuadEaseIn"),
+               (MIN, 3.0, 10, "QuadEaseOut"),
+               (MAX, 3.0, 10, "SineEaseInOut")]
 
 running = True
 #print("starting  position",vs.position)

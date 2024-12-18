@@ -7,14 +7,15 @@ import time
 from varspeed import Vspeed
 
 MIN = 0.0
-MAX = 180.0
+MAX = 100.0
 
 # set up the varspeed object
 #
 # init_position = initial start position
 # result = float, int
-vs1 = Vspeed(init_position=MAX, result="int")
-vs2 = Vspeed(init_position=MAX, result="int")
+# debug = False, True # set if varspeed will output debug info
+vs1 = Vspeed(init_position=MAX, result="int", debug=False)
+vs2 = Vspeed(init_position=MAX, result="int", debug=False)
 
 # create the sequences
 my_sequence1 = [(MIN, 1.0, 10, "QuadEaseIn"),
@@ -40,10 +41,10 @@ while running1 and running2:
         sequence=my_sequence1, loop_max=2)
     if changed1:
         print(
-            f'Sequence Num: {vs1.seq_pos}, Step: {vs1.step}, Position: {position1}')
+            f'Sequence 1 Num: {vs1.seq_pos}, Step: {vs1.step}, Position: {position1}')
 
     position2, running2, changed2 = vs2.sequence(
         sequence=my_sequence2, loop_max=2)
     if changed2:
         print(
-            f'Sequence Num: {vs2.seq_pos}, Step: {vs2.step}, Position: {position2}')
+            f'Sequence 2 Num: {vs2.seq_pos}, Step: {vs2.step}, Position: {position2}')
