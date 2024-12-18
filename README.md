@@ -48,6 +48,9 @@ To set up on CircuitPython:
 
 For any move (even within a sequence), you can set an easing function using the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see https://easings.net. For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
 
+> [!WARNING]  
+> The names on https://easings.net do not reflect the names used in the `easing_functions.py` file. The names used in this project start with the type of easing used by the function (e.g Linear, Quad, Circular) followed by the word _Ease_ and finally whether it's "In", "Out" or "InOut". For example: the function listed on the website as _easeInOutCubic_  is called _CubicEaseInOut_ in this library. The reason behind this naming scheme is to be consistent with python classes naming conventions. The list with all easing functions with the correct names is listed here below.
+
 * LinearInOut (essentially no easing)
 * QuadEaseInOut, QuadEaseIn, QuadEaseOut
 * CubicEaseIn, CubicEaseOut, CubicEaseInOut
