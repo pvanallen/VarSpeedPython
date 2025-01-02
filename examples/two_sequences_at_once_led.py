@@ -15,7 +15,7 @@ MAX = 55000  # higher than this isn't much brighter
 # create a PWMOut object on Pin D2
 led1 = pwmio.PWMOut(board.D2, frequency=5000, duty_cycle=0)
 # create a PWMOut object on Pin D3
-led2 = pwmio.PWMOut(board.D3, frequency=5000, duty_cycle=0)
+led2 = pwmio.PWMOut(board.D4, frequency=5000, duty_cycle=0)
 
 # set up the varspeed objects
 #
@@ -32,17 +32,17 @@ vs2.set_bounds(lower_bound=MIN, upper_bound=MAX)
 led1.duty_cycle = vs1.position
 led2.duty_cycle = vs2.position
 
-my_sequence1 = [(MIN, 1.0, 10, "QuadEaseIn"),
-                (MAX, 1.0, 10, "QuadEaseOut")]
+my_sequence1 = [(MIN, 1.0, 10, "GammaEaseIn"),
+                (MAX, 1.0, 10, "GammaEaseOut")]
 
-my_sequence2 = [(MAX, 1.0, 10, "QuadEaseOut"),
-                (MIN, 1.0, 10, "SineEaseInOut")]
+my_sequence2 = [(MAX, 1.0, 10, "GammaEaseOut"),
+                (MIN, 1.0, 10, "GammaEaseInOut")]
 
 running1 = True
 running2 = True
 #print("starting  position",vs.position)
 while running1 and running2:
-    # run a sequence of moves
+    # run two sequences of moves at the same time
     # sequence(sequence,loop,loop_max)
     # sequence = moves in this format: (next-position,secs-to-move,number-of-steps,easing function) example: [(90,5,10,LinearInOut),(0,8,10,QuadEaseInOut),(180,5,10,CubicEaseIn)]
     # loop_max = number of times to run the sequence in a loop
@@ -58,7 +58,6 @@ while running1 and running2:
 
     position2, running2, changed2 = vs2.sequence(
             sequence=my_sequence2, loop_max=0)
-
     if changed2:
         #print(f'Sequence Num: {vs2.seq_pos}, Step: {vs2.step}, Position: {position2}')
         led2.duty_cycle = position2

@@ -3,7 +3,6 @@
 # changes the brightness of an LED over time
 
 import board
-import digitalio
 import pwmio
 import time
 
@@ -23,26 +22,33 @@ vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
 # LED setup for most CircuitPython boards:
 led = pwmio.PWMOut(board.D2, frequency=5000, duty_cycle=0)
 
-print(f'Paused for 5 seconds at {MIN}...')
-# set the servo to a known starting point
+print(f'Starting at value {MIN}, in 3 seconds starting move to {MAX}...')
+# set the LED to a known starting point
 led.duty_cycle = MIN
-time.sleep(5)
-
-print(f'Moving to {MAX}...')
+time.sleep(3)
 
 running = True
-# fade LED up
+print("fading UP...")
 while running:
     # run a move from the current position
     # move(new_position,time_secs of move,steps in move,easing function)
     # for more into on easing, see: https://github.com/semitable/easing-functions
-    # for a visual repesentation of the easing options see:
+    # for a visual repesentation of the easing options see: https://easings.net
     # NOTE: the names of the easing functions are different on this website
-    #     http://www.emix8.org/forum/viewtopic.php?t=1063
+    # THIS EXAMPLE USES A NEW GAMMA EASING FUNCTION WHICH LOOKS BEST FOR LEDS
     position, running, changed = vs.move(
-        new_position=MAX, time_secs=5, steps=100, easing="QuadEaseInOut")
+        new_position=MAX, time_secs=5, steps=100, easing="GammaEaseIn")
+    if changed:
+        led.duty_cycle = int(position)
+print(f'Paused for 3 seconds at {position} brightness...')
+time.sleep(3)
+        
+print("fading DOWN....")
+running = True
+while running:
+    position, running, changed = vs.move(
+        new_position=MIN, time_secs=5, steps=100, easing="GammaEaseOut",delay_start=3.0)
     if changed:
         led.duty_cycle = int(position)
 
-print(f'Paused for 5 seconds at {position}...')
-time.sleep(5)
+print(f'Now at {position} brightness...')
