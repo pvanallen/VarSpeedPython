@@ -1,10 +1,8 @@
 # move_simple.py
 #
 # a non-hardware dependent example of using the VarSpeedPython class
-# to ramp a value from one value to another
+# to ramp a value from one level to another
 #
-import time
-
 from varspeed import Vspeed
 
 MIN = 0
@@ -15,6 +13,7 @@ MAX = 100
 # init_position = initial start position
 # result = float, int
 # debug = False, True # set if varspeed will output debug info
+
 vs = Vspeed(init_position=MIN, result="int", debug=False)
 
 running = True

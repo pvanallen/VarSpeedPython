@@ -29,9 +29,11 @@ my_servo = servo.Servo(pwm)
 # set the servo to a known starting point
 my_servo.angle = MIN
 
-my_sequence = [(MAX / 2, 2.0, 100, "QuadEaseIn"),
-               (MIN, 2.0, 100, "QuadEaseOut"),
-               (MAX, 2.0, 100, "SineEaseInOut")]
+# note that these sequence moves may include a last delay_start parameter 
+my_sequence = [(MAX, 2.0, 100, "QuadEaseIn"), # missing delay_start parameter defaults to 0.0
+               (MIN, 2.0, 100, "QuadEaseOut",3), # waits 3 seconds to start
+               (MAX, 2.0, 100, "SineEaseInOut",2), # waits 2 seconds to start
+               ] 
 
 running = True
 while running:
@@ -44,10 +46,7 @@ while running:
     #         if 1, play once
     #         if >1, loop sequence that many times
     #
-    position, running, changed = vs.sequence(sequence=my_sequence, loop_max=2)
+    position, running, changed = vs.sequence(sequence=my_sequence, loop_max=1)
 
-    #print(position, running, changed)
     if changed:
-        # print(
-            # f'Sequence Num: {vs.seq_pos}, Step: {vs.step}, Position: {position}')
         my_servo.angle = position

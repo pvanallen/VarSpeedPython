@@ -11,6 +11,7 @@ class Vspeed():
     Args:
         init_position (int/float): sets the initial position of the object.
         result (string = "int" or "float"): sets the type of the returned position.
+        # debug (boolean False or True # set if varspeed will output debug info
 
     Returns:
         object: returns a varspeed object
@@ -30,7 +31,6 @@ class Vspeed():
     self.upper_bound = 1000
     self.lower_bound = 0
     self.last_reported_position = init_position
-    self.easing_correction = 1
     self.result = result
     self.step = 0
     self.increment_seq_num = True
@@ -41,14 +41,16 @@ class Vspeed():
     self.seq_loop_count = 0
     self.debug = debug
 
-  def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut"):
-    """Generates a series of values that transition from the current position to a new_position
+  def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start=0.0):
+    """MOVE: Generates a series of values that transition from the current position to a new_position,
+          with a delay at the start of the move
 
     Args:
         new_position (float): new position output will change to over time_secs
         time_secs (int): time for the transition to the new_position
         steps (int): number of steps to change from the start position to the new_position
         easing (string): the easing function to use for the transition
+        delay_start (float): the number of seconds to delay the start of the move
 
     Returns:
         position (int or float): each new position, marked by changed being True
@@ -57,9 +59,8 @@ class Vspeed():
 
     """
     if not self.started or new_position != self.new_position:
-      if (self.debug): ("new move")
+      if self.debug: print("new move")
       self.new_position = new_position
-      #self.last_position = self.position
       self.start_time = time.monotonic()
       self.end_time = self.start_time + time_secs
       self.step_delay = time_secs / steps
@@ -70,17 +71,22 @@ class Vspeed():
       self.easing = easing
       self.easing_method = getattr(ease, self.easing)
       self.ease = self.easing_method(start=self.position, end=self.new_position, duration=steps)
+      self.delay_start = delay_start
+      self.delay_start_complete = False
+      if self.debug: print("Delaying move by",self.delay_start,"secs")
 
     changed = False
     running = True
     self.started = True
 
-    #if self.new_position != self.position or self.end_time < time.monotonic():
     diff_time = time.monotonic() - self.start_time
-    if diff_time > self.step_delay:
+    if diff_time >= self.delay_start and self.delay_start_complete == False:
+      self.delay_start_complete = True
+    diff_time = time.monotonic() - self.start_time
+    if diff_time > self.step_delay and self.delay_start_complete:
       # time to change
       self.step += 1
-      # if (self.debug): print("new step " ,self.step,diff_time,self.step_delay)
+      # if self.debug: print("new step " ,self.step,diff_time,self.step_delay)
       self.start_time = time.monotonic()
       self.position = self.ease(self.step)
       # are we there yet?
@@ -93,7 +99,7 @@ class Vspeed():
     else:
       changed = True
 
-    # restrict the output to integer if needed
+    # restrict the output to integer if needed (e.g. for a servo)
     if self.result == "int":
       position = round(self.position)
 
@@ -112,10 +118,10 @@ class Vspeed():
     return self.position, running, changed
 
   def sequence(self, sequence, loop_max = 1):
-    """Creates a series of values in a sequence of moves as specified in the sequence array
+    """SEQUENCE: Creates a series of values in a sequence of moves as specified in the sequence array
 
     Args:
-        sequence (array of tuples): perform a sequence of moves (position,time,steps,easing) in the array
+        sequence (array of tuples): perform a sequence of moves (position,time,steps,easing,delay_start) in the array
         loop_max (int): how many time to loop the sequence, zero means loop forever
 
     Returns:
@@ -154,11 +160,17 @@ class Vspeed():
         if self.debug: print("START sequence move",self.seq_pos,sequence[self.seq_pos])
         self.increment_seq_num = False
 
+      # if this sequence does not include a delay_start value (5th element), append it to the tupple
+      if len(sequence[self.seq_pos]) < 5:
+        sequence[self.seq_pos] = sequence[self.seq_pos] + (0.0,)
+      # initiate the move
       position, running, changed = self.move(
         new_position=sequence[self.seq_pos][0],
         time_secs=sequence[self.seq_pos][1],
         steps=sequence[self.seq_pos][2],
-        easing=sequence[self.seq_pos][3])
+        easing=sequence[self.seq_pos][3],
+        delay_start=sequence[self.seq_pos][4],
+        )
 
       if not running: # finished with move
         self.increment_seq_num = True

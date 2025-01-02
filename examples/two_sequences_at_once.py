@@ -22,7 +22,7 @@ my_sequence1 = [(MIN, 1.0, 10, "QuadEaseIn"),
                 (MAX, 1.0, 10, "QuadEaseOut")]
 
 my_sequence2 = [(MAX, 1.0, 10, "QuadEaseOut"),
-                (MIN, 1.0, 10, "SineEaseInOut")]
+                (MIN, 1.0, 10, "QuadEaseIn")]
 
 running1 = True
 running2 = True
@@ -41,10 +41,10 @@ while running1 and running2:
         sequence=my_sequence1, loop_max=2)
     if changed1:
         print(
-            f'Sequence 1 Num: {vs1.seq_pos}, Step: {vs1.step}, Position: {position1}')
+            f'Sequence 1 Move: {vs1.seq_pos}, Step: {vs1.step}, Position: {position1}')
 
     position2, running2, changed2 = vs2.sequence(
         sequence=my_sequence2, loop_max=2)
     if changed2:
         print(
-            f'Sequence 2 Num: {vs2.seq_pos}, Step: {vs2.step}, Position: {position2}')
+            f'Sequence 2 Move: {vs2.seq_pos}, Step: {vs2.step}, Position: {position2}')

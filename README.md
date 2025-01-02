@@ -3,7 +3,9 @@
 ## Description
 This Python library is descended from the VarspeedServo library (https://github.com/netlabtoolkit/VarSpeedServo), originally written for the Arduino in C++ (which was itself built on an early Arduino servo library). Unlike the old Arduino library, VarSpeedPython is not tied to servos, and can be used more generally for timed moves from one value to another. It is also **not** bound to any processor architecture with hardware interrupts etc.
 
-The library is designed for projects that need to control values over time. For example: setting the new angle of a servo in 1.5 seconds; setting the brightness of an LED by fading up; or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move. It also provides a function for running sequences of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
+The library is designed for projects that need to control values over time. For example: setting the new angle of a servo in 3.0 seconds; setting the brightness of an LED by fading up in 2.5 seconds; or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move to make it seem more natural. 
+
+It also provides a function for running **sequences** of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
 
 VarSpeedPython objects are designed to be called repeatedly from within an event loop and do not block execution.
 
@@ -25,11 +27,11 @@ VarSpeedPython objects are designed to be called repeatedly from within an event
 
 ## Circuit Python Setup
 
-To set up on CircuitPython:
+To set up on a CircuitPython hardware device:
 
-* Put varspeed.py in the lib directory on CIRCUITPY
-* Put easing_functions.py in the lib directory on CIRCUITPY
-* Copy the python from any of the examples into code.py at the top of CIRCUITPY
+* Put varspeed/varspeed.py in the **lib** directory on CIRCUITPY
+* Put varspeed/easing_functions.py in the **lib** directory on CIRCUITPY
+* Copy the python code from any of the examples/ into code.py or main.py at the top of CIRCUITPY
 
 ## Code Examples - non-CircuitPython
 
@@ -46,10 +48,10 @@ To set up on CircuitPython:
 
 ## Easing Types
 
-For any move (even within a sequence), you can set an easing function using the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see https://easings.net. For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
+For any move (even within a sequence), you can set an easing function using the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://easings.net](https://easings.net). For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
 
 > [!WARNING]  
-> The names on https://easings.net do not reflect the names used in the `easing_functions.py` file. The names used in this project start with the type of easing used by the function (e.g Linear, Quad, Circular) followed by the word _Ease_ and finally whether it's "In", "Out" or "InOut". For example: the function listed on the website as _easeInOutCubic_  is called _CubicEaseInOut_ in this library. The reason behind this naming scheme is to be consistent with python classes naming conventions. The list with all easing functions with the correct names is listed here below.
+> The names on https://easings.net do not reflect the names used in the `easing_functions.py` file. The names used in this project start with the type of easing used by the function (e.g Linear, Quad, Circular) followed by the word _Ease_ and finally whether it's "In", "Out" or "InOut". For example: the function listed on the website as _easeInOutCubic_  is called _CubicEaseInOut_ in this library. The reason behind this naming scheme is to be consistent with python classes naming conventions. The list with all this library's easing functions with the correct names are listed below. Note also that the new gamma functions are not listed on the easings.net page
 
 * LinearInOut (essentially no easing)
 * QuadEaseInOut, QuadEaseIn, QuadEaseOut
@@ -62,6 +64,11 @@ For any move (even within a sequence), you can set an easing function using the 
 * ElasticEaseIn, ElasticEaseOut, ElasticEaseInOut
 * BackEaseIn, BackEaseOut, BackEaseInOut
 * BounceEaseIn, BounceEaseOut, BounceEaseInOut
+* GammaEaseIn, GammaEaseOut, GammaEaseInOut
+
+
+* **NEW: GAMMA EASING** - provides gamma correction of 2.8 for dimming LEDs and other lighting to match human vision characteristics. **EXPLANATION** of gamma correction: https://www.advateklighting.com/blog/guides/dithering-and-gamma-correction
+
 
 ## CLASS: Vspeed
 ```python
@@ -92,7 +99,7 @@ Creates and initializes a Vspeed object.
 
 ## move
 ```python
-def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut"):
+def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start = 0.0):
 ```
 
 ---
@@ -104,6 +111,7 @@ Generates a series of values that transition from the current position to a new_
 * **time_secs** (int) : time for the transition to the new_position
 * **steps** (int) : number of steps to change from the start position to the new_position
 * **easing** (string) : the easing function to use for the transition
+* **delay_start** (float) : the number of seconds to delay the start of the move - this helps when putting several moves together in a sequence so there can be pauses between moves
 
 ### Returns
 * **position** (int or float) : each new position, marked by changed being True
@@ -120,7 +128,7 @@ def sequence(self, sequence, loop_max = 1):
 Creates a series of values in a sequence of moves as specified in the sequence array.
 
 ### Args
-* **sequence** (array of tuples) : perform a sequence of moves (position,time,steps,easing) in the array.
+* **sequence** (array of tuples) : perform a sequence of moves (position,time,steps,easing,delay_start[optiona]) in the array.
 * **loop_max** (int) : how many times to loop the sequence, zero means loop forever.
 
 ### Returns

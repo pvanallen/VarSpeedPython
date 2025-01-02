@@ -3,8 +3,6 @@
 # a non-hardware dependent example of using the VarSpeedPython class
 # to have a series of moves in a sequence
 #
-import time
-
 from varspeed import Vspeed
 
 MIN = 0.0
