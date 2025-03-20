@@ -100,6 +100,7 @@ class Vspeed():
       changed = True
 
     # restrict the output to integer if needed (e.g. for a servo)
+    position = self.position
     if self.result == "int":
       position = round(self.position)
 
