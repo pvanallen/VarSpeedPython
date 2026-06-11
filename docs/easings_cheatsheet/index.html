@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>VarSpeedPython — Easing Functions</title>
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                background: #f0f2f5;
+                color: #222;
+                padding: 2rem;
+                min-width: 360px;
+            }
+
+            header {
+                margin-bottom: 2.5rem;
+                max-width: 680px;
+            }
+            .servo-float {
+                position: fixed;
+                display: none;
+                pointer-events: none;
+                z-index: 200;
+                background: #fff;
+                border: 1.5px solid #dde0e5;
+                border-radius: 10px;
+                padding: 8px 8px 5px;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
+            }
+            .servo-label {
+                font-size: 0.65rem;
+                color: #bbb;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                text-align: center;
+                margin-top: 3px;
+            }
+            h1 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+            header p {
+                color: #555;
+                font-size: 0.88rem;
+                line-height: 1.5;
+            }
+            code {
+                background: #e3e6ea;
+                padding: 0.1em 0.35em;
+                border-radius: 3px;
+                font-size: 0.85em;
+                font-family: "SFMono-Regular", Consolas, monospace;
+            }
+
+            .family {
+                margin-bottom: 2.5rem;
+            }
+
+            .family-header {
+                display: flex;
+                align-items: baseline;
+                gap: 0.75rem;
+                margin-bottom: 0.6rem;
+                border-bottom: 1px solid #d5d8dd;
+                padding-bottom: 0.4rem;
+            }
+            .family-name {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #555;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+            .family-note {
+                font-size: 0.78rem;
+                color: #777;
+                font-style: italic;
+            }
+
+            .cards {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.65rem;
+            }
+
+            .card {
+                background: #fff;
+                border: 1.5px solid #dde0e5;
+                border-radius: 8px;
+                padding: 0.6rem 0.6rem 0.5rem;
+                width: 233px;
+                cursor: default;
+                transition:
+                    border-color 0.15s,
+                    box-shadow 0.15s;
+                user-select: none;
+            }
+            .card:hover {
+                border-color: #4a8fe8;
+                box-shadow: 0 2px 10px rgba(74, 143, 232, 0.18);
+            }
+
+            .card-vis {
+                display: flex;
+                gap: 6px;
+                align-items: stretch;
+            }
+            .card-vis svg {
+                display: block;
+                flex: 1;
+                min-width: 0;
+                overflow: visible;
+            }
+
+            .grid-line {
+                stroke: #e4e6ea;
+                stroke-width: 1;
+            }
+            .curve {
+                stroke: #9aa0ab;
+                fill: none;
+                stroke-width: 2;
+                stroke-linejoin: round;
+                stroke-linecap: round;
+            }
+            .card:hover .curve {
+                stroke: #3a7bd5;
+            }
+
+            .ball-track {
+                width: 16px;
+                flex-shrink: 0;
+                position: relative;
+                background: #eeeff2;
+                border-radius: 8px;
+                overflow: visible;
+            }
+            .ball {
+                width: 14px;
+                height: 14px;
+                background: #e74c3c;
+                border-radius: 50%;
+                position: absolute;
+                left: 1px;
+                bottom: 0;
+                opacity: 0;
+                transition: opacity 0.12s;
+            }
+            .card:hover .ball {
+                opacity: 1;
+            }
+
+            .example {
+                font-family: "SFMono-Regular", Consolas, monospace;
+                font-size: 0.6rem;
+                color: #999;
+                margin-top: 0.25rem;
+                line-height: 1.45;
+                word-break: break-all;
+            }
+            .card:hover .example {
+                color: #6a9fd8;
+            }
+
+            .label {
+                font-family: "SFMono-Regular", Consolas, monospace;
+                font-size: 0.68rem;
+                color: #555;
+                margin-top: 0.35rem;
+                line-height: 1.3;
+                word-break: break-word;
+            }
+            .card:hover .label {
+                color: #3a7bd5;
+            }
+
+            .family-desc {
+                font-size: 0.8rem;
+                color: #555;
+                margin-bottom: 0.75rem;
+                line-height: 1.5;
+            }
+            .family-desc a {
+                color: #3a7bd5;
+            }
+
+            .controls {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 0.2rem;
+                margin-top: 0.85rem;
+                font-family: "SFMono-Regular", Consolas, monospace;
+                font-size: 0.78rem;
+                color: #555;
+                background: #f7f8fa;
+                border: 1px solid #dde0e5;
+                border-radius: 6px;
+                padding: 0.45rem 0.75rem;
+            }
+            .controls code {
+                background: none;
+                padding: 0;
+                font-size: inherit;
+            }
+            .ctrl-input {
+                font-family: "SFMono-Regular", Consolas, monospace;
+                font-size: inherit;
+                background: #e8f0fe;
+                border: 1px solid #4a8fe8;
+                border-radius: 3px;
+                padding: 0.05em 0.25em;
+                color: #3a7bd5;
+                text-align: center;
+                outline: none;
+                /* no spinner arrows */
+                -moz-appearance: textfield;
+            }
+            .ctrl-input::-webkit-inner-spin-button,
+            .ctrl-input::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            .ctrl-input:focus {
+                background: #d0e4ff;
+                border-color: #2563eb;
+            }
+            #ctrl-secs {
+                width: 3.2em;
+            }
+            #ctrl-steps {
+                width: 3.2em;
+            }
+
+            .gamma-badge {
+                display: inline-block;
+                font-size: 0.65rem;
+                font-weight: 600;
+                background: #fff3cd;
+                color: #856404;
+                border: 1px solid #ffc107;
+                border-radius: 3px;
+                padding: 0.05em 0.4em;
+                margin-bottom: 0.5rem;
+                letter-spacing: 0.03em;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>VarSpeedPython — Easing Functions</h1>
+            <p>
+                Hover a card to preview the motion. Use the name shown as the
+                <code>easing</code> parameter in <code>move_all()</code> and
+                <code>sequence()</code>.<br />
+                All names match the class names in
+                <a
+                    href="https://github.com/pvanallen/VarSpeedPython/blob/master/varspeed/easing_functions.py"
+                    target="_blank"
+                    rel="noopener"
+                    ><code>easing_functions.py</code></a
+                >, part of the
+                <a
+                    href="https://github.com/pvanallen/VarSpeedPython"
+                    target="_blank"
+                    rel="noopener"
+                    >VarSpeedPython</a
+                >
+                library.
+            </p>
+            <p>
+                Visualization inspired by
+                <a href="https://easings.net" target="_blank" rel="noopener"
+                    >easings.net</a
+                >
+                by Andrey Sitnik.
+            </p>
+            <div class="controls">
+                <code>vs.move_all(100,&nbsp;time_secs=</code
+                ><input
+                    class="ctrl-input"
+                    type="number"
+                    id="ctrl-secs"
+                    value="1.5"
+                    min="0.1"
+                    max="60"
+                    step="0.1"
+                /><code>,&nbsp;steps=</code
+                ><input
+                    class="ctrl-input"
+                    type="number"
+                    id="ctrl-steps"
+                    value="20"
+                    min="1"
+                    max="1000"
+                    step="1"
+                /><code>,&nbsp;easing="…")</code>
+            </div>
+        </header>
+
+        <!-- Floating servo preview — positioned to the right of the hovered card via JS -->
+        <div id="servo-float" class="servo-float">
+            <!--
+    Servo geometry — front-face view matching servo datasheet proportions:
+      pivot  (60, 70) = gear centre = tab-hole centre  (all three aligned on y=70)
+      body   x=14 y=42 w=92 h=56  →  body centre y = 42+28 = 70 ✓
+      gear   r=26 (fills ~56% of body width);  inner r=17
+      tabs   y=58 h=24  →  tab-hole centre y = 58+12 = 70 ✓
+      arm sweeps 0°=(10,70) → 90°=(60,20) → 180°=(110,70)
+  -->
+            <svg
+                id="servo-vis"
+                viewBox="0 0 120 106"
+                width="120"
+                height="106"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <!-- Sweep arc -->
+                <path
+                    d="M 10 70 A 50 50 0 0 0 110 70"
+                    stroke="#dde0e5"
+                    stroke-width="1.5"
+                    fill="none"
+                    stroke-dasharray="4 3"
+                />
+                <text
+                    x="5"
+                    y="38"
+                    font-size="8"
+                    fill="#bbb"
+                    text-anchor="start"
+                    font-family="system-ui,sans-serif"
+                >
+                    0°
+                </text>
+                <text
+                    x="115"
+                    y="38"
+                    font-size="8"
+                    fill="#bbb"
+                    text-anchor="end"
+                    font-family="system-ui,sans-serif"
+                >
+                    180°
+                </text>
+
+                <!-- Body — height=56 so gear circle (r=26) sits centred with 2 px margin top/bottom -->
+                <rect
+                    x="14"
+                    y="42"
+                    width="92"
+                    height="56"
+                    rx="5"
+                    fill="#e0e3e8"
+                    stroke="#b0b5bd"
+                    stroke-width="1.5"
+                />
+                <!-- Mounting tabs — centre y=70, aligned with gear centre -->
+                <rect
+                    x="3"
+                    y="58"
+                    width="12"
+                    height="24"
+                    rx="3"
+                    fill="#d5d8de"
+                    stroke="#b0b5bd"
+                    stroke-width="1"
+                />
+                <rect
+                    x="105"
+                    y="58"
+                    width="12"
+                    height="24"
+                    rx="3"
+                    fill="#d5d8de"
+                    stroke="#b0b5bd"
+                    stroke-width="1"
+                />
+                <circle cx="9" cy="70" r="4" fill="#c0c3ca" />
+                <circle cx="111" cy="70" r="4" fill="#c0c3ca" />
+
+                <!-- Output-shaft circle -->
+                <circle
+                    cx="60"
+                    cy="70"
+                    r="26"
+                    fill="#d8dbe1"
+                    stroke="#b0b5bd"
+                    stroke-width="1.5"
+                />
+                <circle
+                    cx="60"
+                    cy="70"
+                    r="17"
+                    fill="#c8cbd2"
+                    stroke="#a8abb3"
+                    stroke-width="1"
+                />
+
+                <!-- Arm — drawn last so it's in front; hub circle stays fixed at pivot -->
+                <g id="servo-arm" transform="rotate(-90, 60, 70)">
+                    <circle cx="60" cy="70" r="10" fill="#3a7bd5" />
+                    <rect
+                        x="57"
+                        y="20"
+                        width="6"
+                        height="50"
+                        rx="3"
+                        fill="#3a7bd5"
+                    />
+                    <circle cx="60" cy="22" r="6" fill="#3a7bd5" />
+                </g>
+
+                <!-- Pivot pin — marks the exact rotation centre -->
+                <circle
+                    cx="60"
+                    cy="70"
+                    r="5"
+                    fill="#888"
+                    stroke="#666"
+                    stroke-width="1"
+                />
+            </svg>
+            <div class="servo-label">servo preview</div>
+        </div>
+
+        <main id="root"></main>
+
+        <script>
+            // ---------------------------------------------------------------------------
+            // Easing functions — direct translation of easing_functions.py
+            // ---------------------------------------------------------------------------
+
+            function _bounceOut(t) {
+                if (t < 4 / 11) return (121 * t * t) / 16;
+                if (t < 8 / 11)
+                    return (363 / 40) * t * t - (99 / 10) * t + 17 / 5;
+                if (t < 9 / 10)
+                    return (
+                        (4356 / 361) * t * t - (35442 / 1805) * t + 16061 / 1805
+                    );
+                return (54 / 5) * t * t - (513 / 25) * t + 268 / 25;
+            }
+
+            const EASINGS = {
+                LinearInOut: (t) => t,
+
+                QuadEaseIn: (t) => t * t,
+                QuadEaseOut: (t) => -(t * (t - 2)),
+                QuadEaseInOut: (t) =>
+                    t < 0.5 ? 2 * t * t : -2 * t * t + 4 * t - 1,
+
+                CubicEaseIn: (t) => t * t * t,
+                CubicEaseOut: (t) => (t - 1) * (t - 1) * (t - 1) + 1,
+                CubicEaseInOut: (t) => {
+                    if (t < 0.5) return 4 * t * t * t;
+                    const p = 2 * t - 2;
+                    return 0.5 * p * p * p + 1;
+                },
+
+                QuarticEaseIn: (t) => t * t * t * t,
+                QuarticEaseOut: (t) =>
+                    (t - 1) * (t - 1) * (t - 1) * (1 - t) + 1,
+                QuarticEaseInOut: (t) => {
+                    if (t < 0.5) return 8 * t * t * t * t;
+                    const p = t - 1;
+                    return -8 * p * p * p * p + 1;
+                },
+
+                QuinticEaseIn: (t) => t * t * t * t * t,
+                QuinticEaseOut: (t) =>
+                    (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1,
+                QuinticEaseInOut: (t) => {
+                    if (t < 0.5) return 16 * t * t * t * t * t;
+                    const p = 2 * t - 2;
+                    return 0.5 * p * p * p * p * p + 1;
+                },
+
+                SineEaseIn: (t) => Math.sin(((t - 1) * Math.PI) / 2) + 1,
+                SineEaseOut: (t) => Math.sin((t * Math.PI) / 2),
+                SineEaseInOut: (t) => 0.5 * (1 - Math.cos(t * Math.PI)),
+
+                CircularEaseIn: (t) => 1 - Math.sqrt(1 - t * t),
+                CircularEaseOut: (t) => Math.sqrt((2 - t) * t),
+                CircularEaseInOut: (t) =>
+                    t < 0.5
+                        ? 0.5 * (1 - Math.sqrt(1 - 4 * t * t))
+                        : 0.5 * (Math.sqrt(-(2 * t - 3) * (2 * t - 1)) + 1),
+
+                ExponentialEaseIn: (t) =>
+                    t === 0 ? 0 : Math.pow(2, 10 * (t - 1)),
+                ExponentialEaseOut: (t) =>
+                    t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+                ExponentialEaseInOut: (t) => {
+                    if (t === 0 || t === 1) return t;
+                    return t < 0.5
+                        ? 0.5 * Math.pow(2, 20 * t - 10)
+                        : -0.5 * Math.pow(2, -20 * t + 10) + 1;
+                },
+
+                ElasticEaseIn: (t) =>
+                    Math.sin(((13 * Math.PI) / 2) * t) *
+                    Math.pow(2, 10 * (t - 1)),
+                ElasticEaseOut: (t) =>
+                    Math.sin(((-13 * Math.PI) / 2) * (t + 1)) *
+                        Math.pow(2, -10 * t) +
+                    1,
+                ElasticEaseInOut: (t) =>
+                    t < 0.5
+                        ? 0.5 *
+                          Math.sin(((13 * Math.PI) / 2) * (2 * t)) *
+                          Math.pow(2, 10 * (2 * t - 1))
+                        : 0.5 *
+                          (Math.sin(((-13 * Math.PI) / 2) * (2 * t - 1 + 1)) *
+                              Math.pow(2, -10 * (2 * t - 1)) +
+                              2),
+
+                BackEaseIn: (t) => t * t * t - t * Math.sin(t * Math.PI),
+                BackEaseOut: (t) => {
+                    const p = 1 - t;
+                    return 1 - (p * p * p - p * Math.sin(p * Math.PI));
+                },
+                BackEaseInOut: (t) => {
+                    if (t < 0.5) {
+                        const p = 2 * t;
+                        return 0.5 * (p * p * p - p * Math.sin(p * Math.PI));
+                    }
+                    const p = 1 - (2 * t - 1);
+                    return (
+                        0.5 * (1 - (p * p * p - p * Math.sin(p * Math.PI))) +
+                        0.5
+                    );
+                },
+
+                BounceEaseIn: (t) => 1 - _bounceOut(1 - t),
+                BounceEaseOut: (t) => _bounceOut(t),
+                BounceEaseInOut: (t) =>
+                    t < 0.5
+                        ? 0.5 * (1 - _bounceOut(1 - 2 * t))
+                        : 0.5 * _bounceOut(2 * t - 1) + 0.5,
+
+                GammaEaseIn: (t) => Math.pow(t, 2.8),
+                GammaEaseOut: (t) => 1 - Math.pow(1 - t, 2.8),
+                GammaEaseInOut: (t) =>
+                    t < 0.5
+                        ? 0.5 * Math.pow(2 * t, 2.8)
+                        : 0.5 * (2 - Math.pow(2 * (1 - t), 2.8)),
+            };
+
+            // ---------------------------------------------------------------------------
+            // Families
+            // ---------------------------------------------------------------------------
+
+            const FAMILIES = [
+                { name: "Linear", easings: ["LinearInOut"] },
+                {
+                    name: "Quadratic",
+                    easings: ["QuadEaseIn", "QuadEaseOut", "QuadEaseInOut"],
+                },
+                {
+                    name: "Cubic",
+                    easings: ["CubicEaseIn", "CubicEaseOut", "CubicEaseInOut"],
+                },
+                {
+                    name: "Quartic",
+                    easings: [
+                        "QuarticEaseIn",
+                        "QuarticEaseOut",
+                        "QuarticEaseInOut",
+                    ],
+                },
+                {
+                    name: "Quintic",
+                    easings: [
+                        "QuinticEaseIn",
+                        "QuinticEaseOut",
+                        "QuinticEaseInOut",
+                    ],
+                },
+                {
+                    name: "Sine",
+                    easings: ["SineEaseIn", "SineEaseOut", "SineEaseInOut"],
+                },
+                {
+                    name: "Circular",
+                    easings: [
+                        "CircularEaseIn",
+                        "CircularEaseOut",
+                        "CircularEaseInOut",
+                    ],
+                },
+                {
+                    name: "Exponential",
+                    easings: [
+                        "ExponentialEaseIn",
+                        "ExponentialEaseOut",
+                        "ExponentialEaseInOut",
+                    ],
+                },
+                {
+                    name: "Elastic",
+                    easings: [
+                        "ElasticEaseIn",
+                        "ElasticEaseOut",
+                        "ElasticEaseInOut",
+                    ],
+                    note: "Overshoots — the curve extends beyond 0 and 1.",
+                },
+                {
+                    name: "Back",
+                    easings: ["BackEaseIn", "BackEaseOut", "BackEaseInOut"],
+                    note: "Slight overshoot at start and/or end.",
+                },
+                {
+                    name: "Bounce",
+                    easings: [
+                        "BounceEaseIn",
+                        "BounceEaseOut",
+                        "BounceEaseInOut",
+                    ],
+                },
+                {
+                    name: "Gamma",
+                    easings: [
+                        "LinearInOut",
+                        "GammaEaseIn",
+                        "GammaEaseOut",
+                        "GammaEaseInOut",
+                    ],
+                    note: "Gamma correction (γ=2.8) — matches human eye sensitivity to brightness. Best choice for LED fading.",
+                    badge: "LED recommended",
+                    desc: 'Gamma easing provides gamma correction of 2.8 for dimming LEDs and other lighting to match human vision characteristics. <a href="https://www.advateklighting.com/blog/guides/dithering-and-gamma-correction" target="_blank" rel="noopener">Explanation of gamma correction →</a>',
+                    colorAnim: true,
+                },
+            ];
+
+            // ---------------------------------------------------------------------------
+            // SVG generation
+            // ---------------------------------------------------------------------------
+
+            const SVG_W = 197; // viewBox width
+            const SVG_H = 129; // viewBox height
+            const PAD = 10; // padding inside viewBox
+            const CW = SVG_W - 2 * PAD; // chart width
+            const CH = SVG_H - 2 * PAD; // chart height
+            const N = 200; // sample count
+
+            function sampleFn(fn) {
+                const pts = [];
+                for (let i = 0; i <= N; i++) {
+                    const t = i / N;
+                    pts.push([t, fn(t)]);
+                }
+                return pts;
+            }
+
+            function bounds(pts) {
+                let lo = Infinity,
+                    hi = -Infinity;
+                for (const [, v] of pts) {
+                    if (v < lo) lo = v;
+                    if (v > hi) hi = v;
+                }
+                lo = Math.min(lo, 0);
+                hi = Math.max(hi, 1);
+                // add 8% breathing room on the value axis
+                const margin = (hi - lo) * 0.08;
+                return { lo: lo - margin, hi: hi + margin };
+            }
+
+            function toXY(t, v, lo, hi) {
+                const x = PAD + t * CW;
+                const y = PAD + CH - ((v - lo) / (hi - lo)) * CH;
+                return [x, y];
+            }
+
+            function pathD(pts, lo, hi) {
+                return pts
+                    .map(([t, v], i) => {
+                        const [x, y] = toXY(t, v, lo, hi);
+                        return (
+                            (i === 0 ? "M" : "L") +
+                            x.toFixed(2) +
+                            " " +
+                            y.toFixed(2)
+                        );
+                    })
+                    .join("");
+            }
+
+            function makeSVG(fn) {
+                const pts = sampleFn(fn);
+                const { lo, hi } = bounds(pts);
+
+                const [, gy0] = toXY(0, 0, lo, hi);
+                const [, gy1] = toXY(0, 1, lo, hi);
+                const gridRight = (PAD + CW).toFixed(2);
+
+                return `<svg viewBox="0 0 ${SVG_W} ${SVG_H}" xmlns="http://www.w3.org/2000/svg">
+    <line class="grid-line" x1="${PAD}" y1="${gy0.toFixed(2)}" x2="${gridRight}" y2="${gy0.toFixed(2)}"/>
+    <line class="grid-line" x1="${PAD}" y1="${gy1.toFixed(2)}" x2="${gridRight}" y2="${gy1.toFixed(2)}"/>
+    <path class="curve" d="${pathD(pts, lo, hi)}"/>
+  </svg>`;
+            }
+
+            // ---------------------------------------------------------------------------
+            // Mutable animation params (driven by header inputs)
+            // ---------------------------------------------------------------------------
+
+            let animSecs = 1.5;
+            let animSteps = 20;
+
+            function exampleText(name) {
+                return `vs.move_all(100, time_secs=${animSecs}, steps=${animSteps}, easing="${name}")`;
+            }
+
+            function updateExamples() {
+                document.querySelectorAll(".card").forEach((card) => {
+                    card.querySelector(".example").textContent = exampleText(
+                        card.dataset.easing,
+                    );
+                });
+            }
+
+            // ---------------------------------------------------------------------------
+            // Build DOM
+            // ---------------------------------------------------------------------------
+
+            const root = document.getElementById("root");
+
+            for (const family of FAMILIES) {
+                const sec = document.createElement("section");
+                sec.className = "family";
+
+                let noteHTML = family.note
+                    ? `<span class="family-note">${family.note}</span>`
+                    : "";
+                let badgeHTML = family.badge
+                    ? `<span class="gamma-badge">${family.badge}</span>`
+                    : "";
+
+                let html = `<div class="family-header">
+    <span class="family-name">${family.name}</span>${noteHTML}
+  </div>`;
+                if (badgeHTML) html += badgeHTML;
+                if (family.desc)
+                    html += `<p class="family-desc">${family.desc}</p>`;
+                html += '<div class="cards">';
+
+                for (const name of family.easings) {
+                    const fn = EASINGS[name];
+                    const svg = makeSVG(fn);
+                    const colorAnim = family.colorAnim
+                        ? ' data-color-anim="true"'
+                        : "";
+                    html += `<div class="card" data-easing="${name}"${colorAnim}>
+      <div class="card-vis">${svg}<div class="ball-track"><div class="ball"></div></div></div>
+      <div class="label">${name}</div>
+      <div class="example">${exampleText(name)}</div>
+    </div>`;
+                }
+
+                html += "</div>";
+                sec.innerHTML = html;
+                root.appendChild(sec);
+            }
+
+            // ---------------------------------------------------------------------------
+            // Hover animation
+            // ---------------------------------------------------------------------------
+
+            const PAUSE_DURATION = 1000; // ms pause at the top
+            const servoArm = document.getElementById("servo-arm");
+            const servoFloat = document.getElementById("servo-float");
+            let raf = null;
+            let activeCard = null;
+
+            function positionFloat(card) {
+                const cardRect = card.getBoundingClientRect();
+                const floatW = servoFloat.offsetWidth || 140;
+                const floatH = servoFloat.offsetHeight || 140;
+                const margin = 12;
+                let left = cardRect.right + margin;
+                // If the float would overflow the right edge of the viewport, flip left
+                if (left + floatW > window.innerWidth - 8) {
+                    left = cardRect.left - floatW - margin;
+                }
+                const top = cardRect.top + (cardRect.height - floatH) / 2;
+                servoFloat.style.left = left.toFixed(0) + "px";
+                servoFloat.style.top = Math.max(8, top).toFixed(0) + "px";
+            }
+
+            function startAnim(card) {
+                if (card === activeCard) return;
+                stopAnim();
+                activeCard = card;
+
+                servoFloat.style.display = "block";
+                positionFloat(card);
+
+                const name = card.dataset.easing;
+                const fn = EASINGS[name];
+                const ball = card.querySelector(".ball");
+                const track = card.querySelector(".ball-track");
+                const isGamma = card.dataset.colorAnim === "true";
+                let t0 = null;
+
+                function frame(ts) {
+                    if (t0 === null) t0 = ts;
+                    const easeDur = animSecs * 1000;
+                    const animDur = easeDur + PAUSE_DURATION;
+                    const elapsed = (ts - t0) % animDur;
+                    let v;
+                    if (elapsed < easeDur) {
+                        // Snap t to discrete step boundaries — simulates the library's actual steps
+                        const rawT = elapsed / easeDur;
+                        const snappedT =
+                            Math.floor(rawT * animSteps) / animSteps;
+                        v = fn(Math.min(1, snappedT));
+                    } else {
+                        v = 1;
+                    }
+                    const usable = track.clientHeight - 14;
+                    ball.style.bottom = (v * usable).toFixed(1) + "px";
+                    servoArm.setAttribute(
+                        "transform",
+                        "rotate(" + (v * 180 - 90).toFixed(1) + ", 60, 70)",
+                    );
+                    if (isGamma) {
+                        const ledOutput = Math.max(0, Math.min(1, v));
+                        const c = Math.pow(ledOutput, 1 / 2.2);
+                        ball.style.background = `rgb(${Math.round(231 * c)},${Math.round(76 * c)},${Math.round(60 * c)})`;
+                    }
+                    positionFloat(card);
+                    raf = requestAnimationFrame(frame);
+                }
+
+                raf = requestAnimationFrame(frame);
+            }
+
+            function stopAnim() {
+                if (raf) {
+                    cancelAnimationFrame(raf);
+                    raf = null;
+                }
+                if (activeCard) {
+                    const ball = activeCard.querySelector(".ball");
+                    ball.style.bottom = "0px";
+                    ball.style.background = "";
+                    activeCard = null;
+                }
+                servoFloat.style.display = "none";
+                servoArm.setAttribute("transform", "rotate(-90, 60, 70)");
+            }
+
+            document.querySelectorAll(".card").forEach((card) => {
+                card.addEventListener("mouseenter", () => startAnim(card));
+                card.addEventListener("mouseleave", stopAnim);
+            });
+
+            // ---------------------------------------------------------------------------
+            // Controls
+            // ---------------------------------------------------------------------------
+
+            document
+                .getElementById("ctrl-secs")
+                .addEventListener("input", (e) => {
+                    const v = parseFloat(e.target.value);
+                    if (!isNaN(v) && v > 0) {
+                        animSecs = v;
+                        updateExamples();
+                    }
+                });
+            document
+                .getElementById("ctrl-steps")
+                .addEventListener("input", (e) => {
+                    const v = parseInt(e.target.value, 10);
+                    if (!isNaN(v) && v > 0) {
+                        animSteps = v;
+                        updateExamples();
+                    }
+                });
+        </script>
+    </body>
+</html>

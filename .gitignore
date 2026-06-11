@@ -1,2 +1,10 @@
 # Mac OS X hidden files
 .DS_Store
+
+# Virtual environment
+.venv/
+
+# Compiled Python
+*.pyc
+__pycache__/
+*.egg-info/
