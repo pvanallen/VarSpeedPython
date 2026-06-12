@@ -4,9 +4,11 @@
 
 The library is designed for projects that need to control values over time. For example: setting the new angle of a servo in 3.0 seconds; setting the brightness of an LED by fading up in 2.5 seconds; or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move to make it seem more natural.
 
-It also provides a function for running **sequences** of moves (that can be looped or repeated if desired), where each move in the sequence has a new position and speed. More than one move or sequence can be run at the same time.
+It also provides a function for running **sequences** of moves where each move in the sequence has a new position and speed. Sequences can be looped or repeated if desired.
 
-VarSpeedPython objects are designed to be called repeatedly from within an event loop and do not block execution.
+More than one move or sequence can be run at the same time.
+
+VarSpeedPython objects are designed to be called repeatedly and do not block execution. It is compatible with standard Python and CircuitPython (v8.0+ to support asyncio, [more info here](https://learn.adafruit.com/cooperative-multitasking-in-circuitpython-with-asyncio/overview)).
 
 This Python library is descended from the VarspeedServo library (https://github.com/netlabtoolkit/VarSpeedServo), originally written for the Arduino in C++ (which was itself built on an early Arduino servo library). Unlike the old Arduino library, VarSpeedPython is not tied to servos, and can be used more generally for timed moves from one value to another. It is also **not** bound to any processor architecture with hardware interrupts etc.
 
@@ -51,7 +53,7 @@ pip install -e .
 ## Quick Start (sync — start here)
 
 ```python
-from varspeed.varspeed_basic import Vspeed
+from varspeed_basic import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -118,7 +120,7 @@ Creates and initializes a Vspeed object.
 ### move
 ```python
 # sync only — varspeed_basic.py
-from varspeed.varspeed_basic import Vspeed
+from varspeed_basic import Vspeed
 
 def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start = 0.0):
 ```
@@ -243,7 +245,9 @@ nothing
 
 ## Easing Types
 
-For any move (even within a sequence), you can set an easing function using the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://philvanallen.com/easings_cheatsheet/](https://philvanallen.com/easings_cheatsheet/). For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
+For any move (even within a sequence), you can set an easing function using any of the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://philvanallen.com/easings_cheatsheet/](https://philvanallen.com/easings_cheatsheet/). 
+
+For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
 
 Easing names in this library start with the family name (e.g. `Linear`, `Quad`, `Cubic`) followed by `Ease` and the direction (`In`, `Out`, or `InOut`). For example, `CubicEaseInOut`. The Gamma functions are unique to this library and not found on other easing references.
 
@@ -260,7 +264,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 * BounceEaseIn, BounceEaseOut, BounceEaseInOut
 * GammaEaseIn, GammaEaseOut, GammaEaseInOut
 
-* **NEW: GAMMA EASING** - provides gamma correction of 2.8 for dimming LEDs and other lighting to match human vision characteristics. **EXPLANATION** of gamma correction: https://www.advateklighting.com/blog/guides/dithering-and-gamma-correction
+* **GAMMA EASING NOTES** - provides gamma correction of 2.8 for dimming LEDs and other lighting to match human vision characteristics. **EXPLANATION** of gamma correction: https://www.advateklighting.com/blog/guides/dithering-and-gamma-correction
 
 ---
 
@@ -284,7 +288,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 ### Sync examples
 
-Uses `varspeed_basic.py` (`from varspeed.varspeed_basic import Vspeed`)
+Uses `varspeed_basic.py` (`from varspeed_basic import Vspeed`)
 
 * **[basic/move_simple.py](examples/basic/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **[basic/sequence_simple.py](examples/basic/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
@@ -302,6 +306,7 @@ To set up on a CircuitPython hardware device:
 
 * Put `varspeed/varspeed.py` in the **lib** directory on CIRCUITPY (async version) **or** `varspeed/varspeed_basic.py` (sync version)
 * Put `varspeed/easing_functions.py` in the **lib** directory on CIRCUITPY
+* Put the asyncio library from the [CircuitPython Library bundle](https://circuitpython.org/libraries) in the **lib** directory on CIRCUITPY
 * Copy the python code from any of the examples into `code.py` or `main.py` at the top of CIRCUITPY
 
 ---
@@ -312,7 +317,7 @@ If you have existing sync code and want to move to the async version, here is th
 
 **Before (sync):**
 ```python
-from varspeed.varspeed_basic import Vspeed
+from varspeed_basic import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -341,8 +346,7 @@ async def main():
 asyncio.run(main())
 ```
 
-Key differences:
-- Import changes from `varspeed.varspeed_basic` to `varspeed`
+Key differences for the new async version:
 - `move()` → `move_all()`, used with `async for` instead of called in a while loop
 - Wrap logic in `async def main()` and call with `asyncio.run(main())`
 - `sequence()` works with `async for` in the same way

@@ -3,7 +3,7 @@
 # a non-hardware dependent example of using the VarSpeedPython class
 # to ramp a value from one level to another
 #
-from varspeed import Vspeed
+from varspeed_basic import Vspeed
 
 MIN = 0
 MAX = 100
