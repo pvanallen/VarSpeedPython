@@ -1,7 +1,7 @@
 # examples/async/move_servo_and_led.py
 #
 # Demonstrates: moving a servo and fading an LED at the same time
-# API style: generator style (move_all) with asyncio.gather()
+# API style: async for loop (move) with asyncio.gather()
 # Sync equivalent: not possible — concurrent motion is the main reason to use async
 #
 # The servo sweeps 0 -> 180 degrees while the LED fades off -> on,
@@ -21,9 +21,8 @@ from varspeed import Vspeed
 SERVO_MIN = 0
 SERVO_MAX = 180
 
-# LED PWM range — 55000 is roughly full brightness for most LEDs
 LED_MIN = 0
-LED_MAX = 55000
+LED_MAX = 65535  # higher than 55000 isn't noticeably brighter for most LEDs
 
 vs_servo = Vspeed(init_position=SERVO_MIN, result="int", debug=False)
 vs_servo.set_bounds(lower_bound=SERVO_MIN, upper_bound=SERVO_MAX)
@@ -42,7 +41,7 @@ pwm_led.duty_cycle = LED_MIN
 async def run_actuator(vs, target, time_secs, steps, easing, label):
     """Step through a move and return the final position."""
     print("moving in...")
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=target, time_secs=time_secs, steps=steps, easing=easing
     ):
         if changed:

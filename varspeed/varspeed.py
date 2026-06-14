@@ -7,7 +7,7 @@ except ImportError:
 
 # Async version of Vspeed. Key differences from varspeed_basic.py:
 #
-# move_all() replaces the sync move() poll loop. Use async for with move_all()
+# move() replaces the sync move() poll loop. Use async for with move()
 # — it steps through the entire move, yielding (position, running, changed) at
 # each step. No external while loop needed.
 #
@@ -23,7 +23,7 @@ except ImportError:
 # Calling patterns:
 #
 # # Single move
-# async for pos, running, changed in vs.move_all(100, time_secs=2.0, steps=20):
+# async for pos, running, changed in vs.move(100, time_secs=2.0, steps=20):
 #     print(pos)
 #
 # # Sequence
@@ -33,7 +33,7 @@ except ImportError:
 
 class Vspeed():
   """Async version of Vspeed. Provides a non-blocking async object that generates timed value
-  sequences via the move_all() and sequence() async iterators.
+  sequences via the move() and sequence() async iterators.
   """
 
   def __init__(self, init_position=0, result="int", debug=False):
@@ -71,8 +71,8 @@ class Vspeed():
     self.seq_loop_count = 0
     self.debug = debug
 
-  def move_all(self, new_position=0, time_secs=2.0, steps=20, easing="LinearInOut", delay_start=0.0):
-    """MOVE_ALL: Async iterator that yields all steps of a move transition.
+  def move(self, new_position=0, time_secs=2.0, steps=20, easing="LinearInOut", delay_start=0.0):
+    """MOVE: Async iterator that yields all steps of a move transition.
 
     Preferred pattern for new code. Use in an async for loop; no external while loop needed.
     Always starts a fresh move from the current position.
@@ -89,7 +89,7 @@ class Vspeed():
         running (Boolean): True if more steps remain in the transition.
         changed (Boolean): True if position changed from previous step.
     """
-    return _MoveAll(self, new_position, time_secs, steps, easing, delay_start)
+    return _Move(self, new_position, time_secs, steps, easing, delay_start)
 
   def sequence(self, sequence, loop_max=1):
     """SEQUENCE: Async iterator that yields values through a sequence of moves.
@@ -143,8 +143,8 @@ class Vspeed():
     self.lower_bound = lower_bound
 
 
-class _MoveAll:
-  """Async iterator for a single timed move. Returned by Vspeed.move_all().
+class _Move:
+  """Async iterator for a single timed move. Returned by Vspeed.move().
 
   Uses __aiter__ / __anext__ rather than an async generator for CircuitPython
   compatibility (CircuitPython does not support PEP 525 async generators).
@@ -274,7 +274,7 @@ class _Sequence:
       if len(step) < 5:
         step = step + (0.0,)
 
-      self._move_iter = _MoveAll(
+      self._move_iter = _Move(
         vs,
         new_position=step[0],
         time_secs=step[1],
@@ -292,9 +292,9 @@ class _Sequence:
 async def _example():
   vs = Vspeed(init_position=0, result="int", debug=True)
 
-  print("=== move_all() ===")
+  print("=== move() ===")
   vs.set_position(0)
-  async for position, running, changed in vs.move_all(new_position=50, time_secs=1.0, steps=5):
+  async for position, running, changed in vs.move(new_position=50, time_secs=1.0, steps=5):
     print("  pos=%d, running=%s" % (position, running))
 
   print("=== sequence() ===")

@@ -17,7 +17,7 @@ import pwmio
 from varspeed import Vspeed
 
 MIN = 0
-MAX = 55000
+MAX = 65535  # higher than 55000 isn't noticeably brighter for most LEDs
 
 vs1 = Vspeed(init_position=MIN, result="int", debug=False)
 vs1.set_bounds(lower_bound=MIN, upper_bound=MAX)

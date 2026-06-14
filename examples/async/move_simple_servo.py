@@ -1,7 +1,7 @@
 # examples/async/move_simple_servo.py
 #
-# Demonstrates: sweeping a servo out then back using async move_all()
-# API style: async for loop (move_all)
+# Demonstrates: sweeping a servo out then back using async move()
+# API style: async for loop (move)
 # Sync equivalent: examples/basic/move_simple_servo.py
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
@@ -27,14 +27,14 @@ my_servo.angle = MIN
 
 async def main():
     print("sweeping OUT...")
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=MAX, time_secs=3, steps=180, easing="SineEaseInOut"
     ):
         if changed:
             my_servo.angle = position
 
     print("sweeping BACK...")
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=MIN, time_secs=3, steps=180, easing="SineEaseInOut", delay_start=1.0
     ):
         if changed:

@@ -78,7 +78,7 @@ from varspeed import Vspeed
 vs = Vspeed(init_position=0, result="int")
 
 async def main():
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=100, time_secs=2.0, steps=20, easing="SineEaseInOut"
     ):
         if changed:
@@ -96,7 +96,7 @@ asyncio.run(main())
 class Vspeed():
 ```
 
-Provides a non-blocking object that can be called repeatedly from an event loop with the `move()` / `move_all()` and `sequence()` functions to generate a timed series of values from a current position to a new position(s).
+Provides a non-blocking object that can be called repeatedly from an event loop with the `move()` and `sequence()` functions to generate a timed series of values from a current position to a new position(s).
 
 ---
 
@@ -141,13 +141,13 @@ Generates a series of values that transition from the current position to a new_
 
 ---
 
-### move_all
+### move (async)
 **async only** — requires `varspeed.py`
 
 ```python
 from varspeed import Vspeed
 
-async for position, running, changed in vs.move_all(new_position, time_secs, steps, easing):
+async for position, running, changed in vs.move(new_position, time_secs, steps, easing):
     ...
 ```
 
@@ -337,7 +337,7 @@ from varspeed import Vspeed
 vs = Vspeed(init_position=0, result="int")
 
 async def main():
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=100, time_secs=2.0, steps=20, easing="SineEaseInOut"
     ):
         if changed:
@@ -347,7 +347,7 @@ asyncio.run(main())
 ```
 
 Key differences for the new async version:
-- `move()` → `move_all()`, used with `async for` instead of called in a while loop
+- `move()` is now an async iterator — use `async for` instead of calling it in a while loop
 - Wrap logic in `async def main()` and call with `asyncio.run(main())`
 - `sequence()` works with `async for` in the same way
 - Use `asyncio.gather()` to run multiple actuators concurrently — this is the main reason to migrate

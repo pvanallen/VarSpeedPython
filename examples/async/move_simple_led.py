@@ -1,7 +1,7 @@
 # examples/async/move_simple_led.py
 #
-# Demonstrates: fading an LED up then down using async move_all()
-# API style: generator style (move_all)
+# Demonstrates: fading an LED up then down using async move()
+# API style: async for loop (move)
 # Sync equivalent: examples/basic/move_simple_led.py
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
@@ -14,7 +14,7 @@ import pwmio
 from varspeed import Vspeed
 
 MIN = 0
-MAX = 55000  # higher than this isn't noticeably brighter for most LEDs
+MAX = 65535  # higher than 55000 isn't noticeably brighter for most LEDs
 
 vs = Vspeed(init_position=MIN, result="int", debug=False)
 vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
@@ -25,10 +25,10 @@ led.duty_cycle = MIN
 
 async def main():
     print("fading UP...")
-    # move_all() steps through the full move, yielding at each step.
+    # move() steps through the full move, yielding at each step.
     # Awaiting each step lets other coroutines run during the pauses —
     # this is how concurrent actuators become possible.
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=MAX, time_secs=5, steps=100, easing="GammaEaseIn"
     ):
         if changed:
@@ -36,7 +36,7 @@ async def main():
 
     print("fading DOWN...")
     # delay_start pauses before the move begins — useful for settling time
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=MIN, time_secs=5, steps=100, easing="GammaEaseOut", delay_start=3.0
     ):
         if changed:

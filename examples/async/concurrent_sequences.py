@@ -17,7 +17,7 @@ from varspeed import Vspeed
 SERVO_MIN = 0
 SERVO_MAX = 180
 LED_MIN   = 0
-LED_MAX   = 55000
+LED_MAX   = 65535  # higher than 55000 isn't noticeably brighter for most LEDs
 
 vs_servo = Vspeed(init_position=SERVO_MIN, result="int", debug=False)
 vs_servo.set_bounds(lower_bound=SERVO_MIN, upper_bound=SERVO_MAX)

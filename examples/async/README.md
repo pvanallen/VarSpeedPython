@@ -18,8 +18,8 @@ python examples/async/move_simple.py
 | File | Demonstrates |
 |------|-------------|
 | `move_simple.py` | Minimal async move, no hardware |
-| `move_simple_led.py` | Fade an LED with `move_all()` |
-| `move_simple_servo.py` | Move a servo with `move_all()` |
+| `move_simple_led.py` | Fade an LED with `move()` |
+| `move_simple_servo.py` | Move a servo with `move()` |
 | `sequence_simple.py` | Async sequence, no hardware |
 | `sequence_simple_servo.py` | Sequence of servo moves |
 | `two_sequences_at_once.py` | Two sequences simultaneously, no hardware |

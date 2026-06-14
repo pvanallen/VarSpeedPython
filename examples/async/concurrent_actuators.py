@@ -1,11 +1,11 @@
 # examples/async/concurrent_actuators.py
 #
 # Demonstrates: two actuators moving concurrently with different speeds and easings
-# API style: async for loop (move_all) with asyncio.gather()
+# API style: async for loop (move) with asyncio.gather()
 # Sync equivalent: not possible — concurrent motion is the main reason to use async
 #
 # Each run_actuator() coroutine drives one Vspeed object through a single move.
-# asyncio.gather() starts both at the same time. Because move_all() uses
+# asyncio.gather() starts both at the same time. Because move() uses
 # asyncio.sleep() between steps, each coroutine yields control to the other
 # while it waits — no threading required.
 #
@@ -22,7 +22,7 @@ vs_b = Vspeed(init_position=100, result="float", debug=False)
 
 async def run_actuator(vs, target, time_secs, steps, easing, label):
     """Step through a single move and print each changed value."""
-    async for position, running, changed in vs.move_all(
+    async for position, running, changed in vs.move(
         new_position=target, time_secs=time_secs, steps=steps, easing=easing
     ):
         if changed:
