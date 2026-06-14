@@ -1,11 +1,11 @@
 # examples/async/two_sequences_at_once_led.py
 #
 # Demonstrates: two LEDs pulsing in opposite phase simultaneously
-# API style: async for loop (sequence) with asyncio.gather()
+# API style: async for loop (sequence) with asyncio.create_task()
 # Sync equivalent: examples/basic/two_sequences_at_once_led.py
 #
 # LED 1 fades up while LED 2 fades down, then vice versa — looping forever.
-# asyncio.gather() keeps both running in the same event loop without threading.
+# create_task() starts each coroutine as a named task running concurrently.
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
 # On older CircuitPython, use: asyncio.get_event_loop().run_until_complete(main())
@@ -48,10 +48,10 @@ async def run_actuator(vs, sequence, led):
 
 
 async def main():
-    await asyncio.gather(
-        run_actuator(vs1, seq1, led1),
-        run_actuator(vs2, seq2, led2),
-    )
+    task_led1 = asyncio.create_task(run_actuator(vs1, seq1, led1))
+    task_led2 = asyncio.create_task(run_actuator(vs2, seq2, led2))
+    await task_led1
+    await task_led2
 
 
 asyncio.run(main())

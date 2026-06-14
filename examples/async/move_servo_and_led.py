@@ -1,11 +1,11 @@
 # examples/async/move_servo_and_led.py
 #
 # Demonstrates: moving a servo and fading an LED at the same time
-# API style: async for loop (move) with asyncio.gather()
+# API style: async for loop (move) with asyncio.create_task()
 # Sync equivalent: not possible — concurrent motion is the main reason to use async
 #
 # The servo sweeps 0 -> 180 degrees while the LED fades off -> on,
-# both running simultaneously in the same event loop.
+# both running simultaneously as named tasks in the same event loop.
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
 # On older CircuitPython, use: asyncio.get_event_loop().run_until_complete(main())
@@ -54,22 +54,18 @@ async def run_actuator(vs, target, time_secs, steps, easing, label):
 
 async def main():
     print("moving out...")
-    # asyncio.gather() runs both coroutines at the same time.
-    # Each one yields control during its sleep, letting the other advance.
-    await asyncio.gather(
-        run_actuator(vs_servo, SERVO_MAX, time_secs=3, steps=180,
-                     easing="SineEaseInOut", label="servo"),
-        run_actuator(vs_led,   LED_MAX,   time_secs=6, steps=100,
-                     easing="GammaEaseIn",  label="led"),
-    )
+    # create_task() starts each coroutine as a named task.
+    # Each task yields control during its sleep, letting the other advance.
+    task_servo = asyncio.create_task(run_actuator(vs_servo, SERVO_MAX, time_secs=3, steps=180, easing="SineEaseInOut", label="servo"))
+    task_led   = asyncio.create_task(run_actuator(vs_led,   LED_MAX,   time_secs=6, steps=100, easing="GammaEaseIn",  label="led"))
+    await task_servo
+    await task_led
 
     print("returning...")
-    await asyncio.gather(
-        run_actuator(vs_servo, SERVO_MIN, time_secs=6, steps=180,
-                     easing="SineEaseInOut", label="servo"),
-        run_actuator(vs_led,   LED_MIN,   time_secs=3, steps=100,
-                     easing="GammaEaseOut", label="led"),
-    )
+    task_servo = asyncio.create_task(run_actuator(vs_servo, SERVO_MIN, time_secs=6, steps=180, easing="SineEaseInOut", label="servo"))
+    task_led   = asyncio.create_task(run_actuator(vs_led,   LED_MIN,   time_secs=3, steps=100, easing="GammaEaseOut",  label="led"))
+    await task_servo
+    await task_led
     print("both done")
 
 

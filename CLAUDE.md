@@ -81,6 +81,25 @@ Both sync and async versions coexist:
 These conventions make async code more readable for beginners. Follow them in all
 examples and tutorial code.
 
+### async for is the default — concurrency is the exception
+
+Use `async for` as the default pattern. It is sequential and straightforward:
+one move finishes, then the next begins. Only reach for `create_task()` when two
+things genuinely need to run at the same time.
+
+```python
+# PREFERRED for most examples — simple, sequential, no concurrency needed
+async for position, running, changed in vs.move(100, time_secs=2.0, steps=20):
+    if changed:
+        print(position)
+
+# Only use create_task() when true concurrency is the point of the example
+task_a = asyncio.create_task(run_actuator(vs_a, ...))
+task_b = asyncio.create_task(run_actuator(vs_b, ...))
+await task_a
+await task_b
+```
+
 ### Use create_task() instead of gather()
 Prefer `asyncio.create_task()` over `asyncio.gather()` in examples. `create_task()` is
 more explicit — each task is named and started individually, making it clear what is

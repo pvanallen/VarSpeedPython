@@ -1,7 +1,7 @@
 # examples/async/concurrent_sequences.py
 #
 # Demonstrates: a servo and an LED each running their own sequence simultaneously
-# API style: async for loop (sequence) with asyncio.gather()
+# API style: async for loop (sequence) with asyncio.create_task()
 # Sync equivalent: not possible — concurrent sequences require async
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
@@ -52,10 +52,10 @@ async def run_actuator(vs, sequence, label):
 
 
 async def main():
-    await asyncio.gather(
-        run_actuator(vs_servo, servo_seq, "servo"),
-        run_actuator(vs_led,   led_seq,   "led"),
-    )
+    task_servo = asyncio.create_task(run_actuator(vs_servo, servo_seq, "servo"))
+    task_led   = asyncio.create_task(run_actuator(vs_led,   led_seq,   "led"))
+    await task_servo
+    await task_led
 
 
 asyncio.run(main())

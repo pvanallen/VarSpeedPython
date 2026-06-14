@@ -1,7 +1,7 @@
 # examples/async/two_sequences_at_once_servo.py
 #
 # Demonstrates: two servos sweeping in opposite directions simultaneously
-# API style: async for loop (sequence) with asyncio.gather()
+# API style: async for loop (sequence) with asyncio.create_task()
 # Sync equivalent: examples/basic/two_sequences_at_once_servo.py
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
@@ -47,10 +47,10 @@ async def run_actuator(vs, sequence, my_servo):
 
 
 async def main():
-    await asyncio.gather(
-        run_actuator(vs1, seq1, servo1),
-        run_actuator(vs2, seq2, servo2),
-    )
+    task_servo1 = asyncio.create_task(run_actuator(vs1, seq1, servo1))
+    task_servo2 = asyncio.create_task(run_actuator(vs2, seq2, servo2))
+    await task_servo1
+    await task_servo2
 
 
 asyncio.run(main())

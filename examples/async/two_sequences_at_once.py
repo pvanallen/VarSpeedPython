@@ -1,11 +1,12 @@
 # examples/async/two_sequences_at_once.py
 #
 # Demonstrates: two sequences running concurrently — no hardware needed
-# API style: async for loop (sequence) with asyncio.gather()
+# API style: async for loop (sequence) with asyncio.create_task()
 # Sync equivalent: examples/basic/two_sequences_at_once.py
 #
-# asyncio.gather() runs both coroutines at the same time. Each one yields
-# control during its sleep, letting the other advance — without threading.
+# create_task() starts each coroutine as a named task. Because move() and
+# sequence() use asyncio.sleep() between steps, each task yields control to
+# the other while it waits — no threading required.
 #
 # CircuitPython note: asyncio.run(main()) works with adafruit_asyncio v3+.
 # On older CircuitPython, use: asyncio.get_event_loop().run_until_complete(main())
@@ -34,10 +35,11 @@ async def run_actuator(vs, sequence, label):
 
 
 async def main():
-    await asyncio.gather(
-        run_actuator(vs1, seq1, "A"),
-        run_actuator(vs2, seq2, "B"),
-    )
+    # Each task runs independently — naming them makes it clear what is concurrent.
+    task_a = asyncio.create_task(run_actuator(vs1, seq1, "A"))
+    task_b = asyncio.create_task(run_actuator(vs2, seq2, "B"))
+    await task_a
+    await task_b
     print("both done")
 
 
