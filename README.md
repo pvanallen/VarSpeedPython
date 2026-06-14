@@ -285,6 +285,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 * **[async/concurrent_actuators.py](examples/async/concurrent_actuators.py)** — two actuators with different speeds and easings
 * **[async/concurrent_sequences.py](examples/async/concurrent_sequences.py)** — a servo and LED each running their own sequence
 * **[async/move_servo_and_led.py](examples/async/move_servo_and_led.py)** — servo and LED moving simultaneously
+* **[async/sensor-drive-servo.py](examples/async/sensor-drive-servo.py)** — analog sensor reading drives servo position concurrently
 
 ### Sync examples
 
