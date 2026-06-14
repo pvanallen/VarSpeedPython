@@ -350,4 +350,4 @@ Key differences for the new async version:
 - `move()` is now an async iterator — use `async for` instead of calling it in a while loop
 - Wrap logic in `async def main()` and call with `asyncio.run(main())`
 - `sequence()` works with `async for` in the same way
-- Use `asyncio.gather()` to run multiple actuators concurrently — this is the main reason to migrate
+- Use `asyncio.create_task()` to run multiple actuators concurrently — this is the main reason to migrate
