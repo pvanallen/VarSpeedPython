@@ -143,6 +143,26 @@ class Vspeed():
     self.lower_bound = lower_bound
 
 
+def map_range(value, in_min, in_max, out_min, out_max, result="float"):
+  """Map a value from one range to another.
+
+  Args:
+      value (int or float): input value to map.
+      in_min (int or float): lower bound of the input range.
+      in_max (int or float): upper bound of the input range.
+      out_min (int or float): lower bound of the output range.
+      out_max (int or float): upper bound of the output range.
+      result (string): "int" to return a rounded integer, "float" for a float.
+
+  Returns:
+      int or float: the mapped value in the output range.
+  """
+  value = (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+  if result == "int":
+    return round(value)
+  return float(value)
+
+
 class _Move:
   """Async iterator for a single timed move. Returned by Vspeed.move().
 
