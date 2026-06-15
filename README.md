@@ -38,15 +38,13 @@ This Python library is descended from the VarspeedServo library (https://github.
 
 ## Installation
 
-```bash
-pip install varspeedpython
-```
-
-Or install in editable mode from the repo:
+**Computer** — For a simple setup, place `varspeed/varspeed.py` and `varspeed/easing_functions.py` in your working directory. Or, install in editable mode from the repo:
 
 ```bash
 pip install -e .
 ```
+
+**Device with CircuitPython** — place `varspeed/varspeed.py` and `varspeed/easing_functions.py` in the `CIRCUITPY/lib/` directory, along with the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
 
 ---
 
