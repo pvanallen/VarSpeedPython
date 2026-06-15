@@ -25,8 +25,8 @@ This Python library is descended from the VarspeedServo library (https://github.
 <!-- TOC START min:2 max:2 link:true asterisk:false update:true -->
 - [Description](#description)
 - [Installation](#installation)
-- [Quick Start (sync — start here)](#quick-start-sync--start-here)
-- [Quick Start (async)](#quick-start-async)
+- [Quick Start (async — start here)](#quick-start-async--start-here)
+- [Quick Start (sync)](#quick-start-sync)
 - [API Reference](#api-reference)
 - [Easing Types](#easing-types)
 - [Examples](#examples)
@@ -50,26 +50,7 @@ pip install -e .
 
 ---
 
-## Quick Start (sync — start here)
-
-```python
-from varspeed_basic import Vspeed
-
-vs = Vspeed(init_position=0, result="int")
-
-while True:
-    position, running, changed = vs.move(new_position=100, time_secs=2.0, steps=20, easing="SineEaseInOut")
-    if changed:
-        print(position)  # drive your actuator here
-    if not running:
-        break
-```
-
----
-
-## Quick Start (async)
-
-**async only** — requires `varspeed.py`
+## Quick Start (async — start here)
 
 ```python
 import asyncio
@@ -85,6 +66,25 @@ async def main():
             print(position)  # drive your actuator here
 
 asyncio.run(main())
+```
+
+---
+
+## Quick Start (sync)
+
+Uses `varspeed_basic.py` — requires `varspeed_basic import Vspeed`
+
+```python
+from varspeed_basic import Vspeed
+
+vs = Vspeed(init_position=0, result="int")
+
+while True:
+    position, running, changed = vs.move(new_position=100, time_secs=2.0, steps=20, easing="SineEaseInOut")
+    if changed:
+        print(position)  # drive your actuator here
+    if not running:
+        break
 ```
 
 ---
@@ -285,7 +285,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 * **[async/concurrent_actuators.py](examples/async/concurrent_actuators.py)** — two actuators with different speeds and easings
 * **[async/concurrent_sequences.py](examples/async/concurrent_sequences.py)** — a servo and LED each running their own sequence
 * **[async/move_servo_and_led.py](examples/async/move_servo_and_led.py)** — servo and LED moving simultaneously
-* **[async/sensor-drive-servo.py](examples/async/sensor-drive-servo.py)** — analog sensor reading drives servo position concurrently
+* **[async/sensor-drive-servo.py](examples/async/sensor-drive-servo.py)** — read an analog sensor and drive a servo concurrently
 
 ### Sync examples
 
