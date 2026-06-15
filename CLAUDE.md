@@ -43,6 +43,7 @@ Both sync and async versions coexist:
   instead. CircuitPython does not support PEP 525 async generators.
 - `asyncio.create_task()` works on CircuitPython 10+ but flag it with a comment if used.
 - `asyncio.Queue()` is NOT available on CircuitPython — do not use it.
+- `match`/`case` (structural pattern matching) is NOT supported in CircuitPython — use `if`/`elif` instead.
 
 ### Python Version
 - CPython: 3.9+
