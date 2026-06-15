@@ -241,6 +241,28 @@ nothing
 
 ---
 
+### map_range
+```python
+from varspeed import map_range
+
+map_range(value, in_min, in_max, out_min, out_max, result="float")
+```
+
+Maps a value from one range to another. Useful for converting sensor readings to actuator ranges.
+
+#### Args
+* **value** (int or float) : input value to map
+* **in_min** (int or float) : lower bound of the input range
+* **in_max** (int or float) : upper bound of the input range
+* **out_min** (int or float) : lower bound of the output range
+* **out_max** (int or float) : upper bound of the output range
+* **result** (string) : `"int"` to return a rounded integer, `"float"` for a float (default)
+
+#### Returns
+* **int or float** : the mapped value in the output range
+
+---
+
 ## Easing Types
 
 For any move (even within a sequence), you can set an easing function using any of the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://philvanallen.com/easings_cheatsheet/](https://philvanallen.com/easings_cheatsheet/). 
