@@ -344,7 +344,6 @@ indent-width = 2
 - Auto-commit
 - Modify the university tutorial page or any external resources
 - Create the tutorial app UI until the library and examples are stable and reviewed
-- Add a `Vsensor` class or any sensor-reading functionality to either library file —
-  sensor support lives in `rsensor.py` only
+- Add sensor-reading functionality to either library file — sensor support lives in `rsensor.py` only
 - Use `asyncio.gather()` in examples — use `create_task()` instead
 - Reformat indentation from 2 spaces to 4 spaces
