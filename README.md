@@ -243,7 +243,8 @@ nothing
 
 ### map_range
 ```python
-from varspeed.varspeed_async import map_range
+from varspeed.varspeed import map_range        # sync
+from varspeed.varspeed_async import map_range  # async
 
 map_range(value, in_min, in_max, out_min, out_max, result="float")
 ```
