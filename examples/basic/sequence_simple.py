@@ -1,40 +1,31 @@
-# sequence_simple.py
+# examples/basic/sequence_simple.py
 #
-# a non-hardware dependent example of using the VarSpeedPython class
-# to have a series of moves in a sequence
+# Demonstrates: running a sequence of moves using sequence() — no hardware needed
+# API style: call sequence() on every loop iteration
+# Async equivalent: examples/async/sequence_simple.py
+# Easing reference: https://philvanallen.com/easings_cheatsheet/
 #
+# sequence() steps through each move in the list in order, looping if requested.
+# Each tuple is: (target_position, time_secs, steps, easing_name)
+
 from varspeed import Vspeed
 
-MIN = 0.0
-MAX = 100.0
+MIN = 0
+MAX = 100
 
-# set up the varspeed object
-#
-# init_position = initial start position
-# result = float, int
-# debug = False, True # set if varspeed will output debug info
-vs = Vspeed(init_position=MAX, result="int", debug=False)
-# make the output of the function be within the bounds set
-vs.set_bounds(lower_bound=MIN, upper_bound=MAX)
+vs = Vspeed(init_position=MIN, result="int", debug=False)
 
-my_sequence = [(MAX / 2, 3.0, 10, "QuadEaseIn"),
-               (MIN, 3.0, 10, "QuadEaseOut"),
-               (MAX, 3.0, 10, "SineEaseInOut")]
+my_sequence = [
+    (100, 2.0, 20, "QuadEaseIn"),
+    (0,   2.0, 20, "QuadEaseOut"),
+    (50,  1.0, 10, "LinearInOut"),
+]
 
+print("running sequence...")
 running = True
-#print("starting  position",vs.position)
 while running:
-  # run a sequence of moves
-  # sequence(sequence,loop,loop_max)
-  # sequence = moves in this format: (next-position,secs-to-move,number-of-steps,easing function) example: [(90,5,10,LinearInOut),(0,8,10,QuadEaseInOut),(180,5,10,CubicEaseIn)]
-  # loop_max = number of times to run the sequence in a loop
-  #     if zero, loop forever
-  #     if 1, play once
-  #     if >1, loop sequence that many times
-  #
-    position, running, changed = vs.sequence(sequence=my_sequence, loop_max=2)
-
-  #print(position, running, changed)
+    position, running, changed = vs.sequence(my_sequence, loop_max=2)
     if changed:
-        print(
-            f'Sequence Num: {vs.seq_pos}, Step: {vs.step}, Position: {position}')
+        print(position)
+
+print("done")
