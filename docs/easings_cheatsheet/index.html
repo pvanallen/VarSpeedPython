@@ -276,7 +276,7 @@
             <h1>VarSpeedPython — Easing Functions</h1>
             <p>
                 Hover a card to preview the motion. Use the name shown as the
-                <code>easing</code> parameter in <code>move_all()</code> and
+                <code>easing</code> parameter in <code>move()</code> and
                 <code>sequence()</code>.<br />
                 All names match the class names in
                 <a
@@ -301,7 +301,7 @@
                 by Andrey Sitnik.
             </p>
             <div class="controls">
-                <code>vs.move_all(</code
+                <code>vs.move(</code
                 ><input
                     class="ctrl-input"
                     type="number"
@@ -747,7 +747,7 @@
             let animSteps = 20;
 
             function exampleText(name) {
-                return `vs.move_all(${animPos}, time_secs=${animSecs}, steps=${animSteps}, easing="${name}")`;
+                return `vs.move(${animPos}, time_secs=${animSecs}, steps=${animSteps}, easing="${name}")`;
             }
 
             function updateExamples() {
