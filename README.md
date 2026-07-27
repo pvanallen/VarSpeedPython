@@ -38,7 +38,7 @@ This Python library is descended from the VarspeedServo library (https://github.
 
 ## Installation
 
-**Computer** — For a simple setup, place `varspeed/varspeed.py` and `varspeed/easing_functions.py` in your working directory. Or, install in editable mode from the repo:
+**Computer** — For a simple setup, place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in your working directory. Or, install in editable mode from the repo:
 
 ```bash
 pip install -e .
@@ -307,6 +307,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 * **[async/concurrent_sequences.py](examples/async/concurrent_sequences.py)** — a servo and LED each running their own sequence
 * **[async/move_servo_and_led.py](examples/async/move_servo_and_led.py)** — servo and LED moving simultaneously
 * **[async/sensor-drive-servo.py](examples/async/sensor-drive-servo.py)** — read an analog sensor and drive a servo concurrently
+* **[async/sensor-determine-sequence.py](examples/async/sensor-determine-sequence.py)** — use a sensor reading to select and run a varspeed sequence
 
 ### Sync examples
 
