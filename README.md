@@ -38,13 +38,31 @@ This Python library is descended from the VarspeedServo library (https://github.
 
 ## Installation
 
-**Computer** — Place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in your working directory. Or, clone the repo and add `varspeed/` to your Python path:
+**Computer (simple)** — Copy the files you need from the `varspeed/` directory into your project folder:
 
-```bash
-export PYTHONPATH="/path/to/VarSpeedPython/varspeed"
+| You want | Files to copy |
+|----------|--------------|
+| Sync | `varspeed/varspeed.py` + `varspeed/easing_functions.py` |
+| Async | `varspeed/varspeed_async.py` + `varspeed/easing_functions.py` |
+
+Then import directly:
+```python
+from varspeed import Vspeed        # sync
+from varspeed_async import Vspeed  # async
 ```
 
-**Device with CircuitPython** — place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
+**Computer (repo clone)** — Clone the repo and point PYTHONPATH at the `varspeed/` directory:
+
+```bash
+git clone https://github.com/pvanallen/VarSpeedPython.git
+cd VarSpeedPython
+python -m venv .venv
+source .venv/bin/activate
+echo 'export PYTHONPATH="/path/to/VarSpeedPython/varspeed"' >> .venv/bin/activate
+deactivate && source .venv/bin/activate
+```
+
+**Device with CircuitPython** — Copy `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` into the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
 
 ---
 
