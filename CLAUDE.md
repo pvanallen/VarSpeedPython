@@ -184,11 +184,12 @@ async def init():
 - Constants: ALL_CAPS at module level
 
 ### map_range()
-Use `map_range()` from `rsensor.py` for all sensor value conversions. Always specify
+Use `map_range()` from the varspeed library for all sensor value conversions. Always specify
 `result="int"` for servo angles, `result="float"` for brightness values:
 
 ```python
-from rsensor import Rsensor, map_range
+from varspeed.varspeed import map_range        # sync
+from varspeed.varspeed_async import map_range  # async
 
 angle = map_range(analog_in.value, 0, 65535, 0, 180, result="int")
 ```
@@ -248,7 +249,7 @@ never be copied into the examples folders — examples import from the installed
 - Do not restructure or remove any existing sync documentation.
 - Combine sync and async documentation in a single README.md using clear callout markers.
 - Any async-specific section or method must be marked with `**async only**` at the start,
-  followed by the required import: `**async only** — requires \`varspeed.py\``
+  followed by the required import: `**async only** — requires \`varspeed_async.py\``
 - Use the following section structure (add new sections, do not reorder existing ones):
 
 ```
@@ -343,7 +344,7 @@ indent-width = 2
 - Auto-commit
 - Modify the university tutorial page or any external resources
 - Create the tutorial app UI until the library and examples are stable and reviewed
-- Add a `Vsensor` class or any sensor-reading functionality to `varspeed.py` —
+- Add a `Vsensor` class or any sensor-reading functionality to either library file —
   sensor support lives in `rsensor.py` only
 - Use `asyncio.gather()` in examples — use `create_task()` instead
 - Reformat indentation from 2 spaces to 4 spaces
