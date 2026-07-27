@@ -40,13 +40,21 @@
                 padding: 8px 8px 5px;
                 box-shadow: 0 4px 18px rgba(0, 0, 0, 0.13);
             }
+            .servo-easing-label {
+                font-family: "SFMono-Regular", Consolas, monospace;
+                font-size: 0.7rem;
+                color: #444;
+                text-align: center;
+                margin-top: 5px;
+                font-weight: 600;
+            }
             .servo-label {
                 font-size: 0.65rem;
                 color: #bbb;
                 text-transform: uppercase;
                 letter-spacing: 0.08em;
                 text-align: center;
-                margin-top: 3px;
+                margin-top: 2px;
             }
             h1 {
                 font-size: 1.5rem;
@@ -239,6 +247,9 @@
                 background: #d0e4ff;
                 border-color: #2563eb;
             }
+            #ctrl-pos {
+                width: 3.2em;
+            }
             #ctrl-secs {
                 width: 3.2em;
             }
@@ -290,7 +301,16 @@
                 by Andrey Sitnik.
             </p>
             <div class="controls">
-                <code>vs.move_all(100,&nbsp;time_secs=</code
+                <code>vs.move_all(</code
+                ><input
+                    class="ctrl-input"
+                    type="number"
+                    id="ctrl-pos"
+                    value="180"
+                    min="0"
+                    max="180"
+                    step="1"
+                /><code>,&nbsp;time_secs=</code
                 ><input
                     class="ctrl-input"
                     type="number"
@@ -435,6 +455,7 @@
                     stroke-width="1"
                 />
             </svg>
+            <div id="servo-easing-label" class="servo-easing-label"></div>
             <div class="servo-label">servo preview</div>
         </div>
 
@@ -721,11 +742,12 @@
             // Mutable animation params (driven by header inputs)
             // ---------------------------------------------------------------------------
 
+            let animPos = 180;
             let animSecs = 1.5;
             let animSteps = 20;
 
             function exampleText(name) {
-                return `vs.move_all(100, time_secs=${animSecs}, steps=${animSteps}, easing="${name}")`;
+                return `vs.move_all(${animPos}, time_secs=${animSecs}, steps=${animSteps}, easing="${name}")`;
             }
 
             function updateExamples() {
@@ -786,6 +808,7 @@
             const PAUSE_DURATION = 1000; // ms pause at the top
             const servoArm = document.getElementById("servo-arm");
             const servoFloat = document.getElementById("servo-float");
+            const servoEasingLabel = document.getElementById("servo-easing-label");
             let raf = null;
             let activeCard = null;
 
@@ -795,13 +818,23 @@
                 const floatH = servoFloat.offsetHeight || 140;
                 const margin = 12;
                 let left = cardRect.right + margin;
-                // If the float would overflow the right edge of the viewport, flip left
+                let top = cardRect.top + (cardRect.height - floatH) / 2;
+                // If right overflows, try left side
                 if (left + floatW > window.innerWidth - 8) {
                     left = cardRect.left - floatW - margin;
                 }
-                const top = cardRect.top + (cardRect.height - floatH) / 2;
-                servoFloat.style.left = left.toFixed(0) + "px";
-                servoFloat.style.top = Math.max(8, top).toFixed(0) + "px";
+                // If left side also doesn't fit (narrow viewport), position below the card
+                if (left < 8) {
+                    left = Math.max(8, cardRect.left);
+                    top = cardRect.bottom + margin;
+                    // If below overflows, go above
+                    if (top + floatH > window.innerHeight - 8) {
+                        top = cardRect.top - floatH - margin;
+                    }
+                }
+                top = Math.max(8, Math.min(top, window.innerHeight - floatH - 8));
+                servoFloat.style.left = Math.max(8, left).toFixed(0) + "px";
+                servoFloat.style.top = top.toFixed(0) + "px";
             }
 
             function startAnim(card) {
@@ -813,6 +846,7 @@
                 positionFloat(card);
 
                 const name = card.dataset.easing;
+                servoEasingLabel.textContent = name;
                 const fn = EASINGS[name];
                 const ball = card.querySelector(".ball");
                 const track = card.querySelector(".ball-track");
@@ -838,7 +872,7 @@
                     ball.style.bottom = (v * usable).toFixed(1) + "px";
                     servoArm.setAttribute(
                         "transform",
-                        "rotate(" + (v * 180 - 90).toFixed(1) + ", 60, 70)",
+                        "rotate(" + (v * animPos - 90).toFixed(1) + ", 60, 70)",
                     );
                     if (isGamma) {
                         const ledOutput = Math.max(0, Math.min(1, v));
@@ -867,15 +901,54 @@
                 servoArm.setAttribute("transform", "rotate(-90, 60, 70)");
             }
 
+            let touchStartX = 0;
+            let touchStartY = 0;
+
             document.querySelectorAll(".card").forEach((card) => {
                 card.addEventListener("mouseenter", () => startAnim(card));
                 card.addEventListener("mouseleave", stopAnim);
+
+                card.addEventListener("touchstart", (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+
+                card.addEventListener("touchend", (e) => {
+                    const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+                    const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+                    // Only treat as a tap if the finger didn't scroll
+                    if (dx > 10 || dy > 10) return;
+                    e.preventDefault(); // suppress the ghost mouseenter
+                    if (activeCard === card) {
+                        stopAnim();
+                    } else {
+                        startAnim(card);
+                    }
+                }, { passive: false });
             });
+
+            // Tap outside any card dismisses the animation
+            document.addEventListener("touchend", (e) => {
+                if (activeCard && !e.target.closest(".card")) {
+                    const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+                    const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+                    if (dx <= 10 && dy <= 10) stopAnim();
+                }
+            }, { passive: true });
 
             // ---------------------------------------------------------------------------
             // Controls
             // ---------------------------------------------------------------------------
 
+            document
+                .getElementById("ctrl-pos")
+                .addEventListener("input", (e) => {
+                    const v = parseInt(e.target.value, 10);
+                    if (!isNaN(v) && v >= 0) {
+                        animPos = v;
+                        updateExamples();
+                    }
+                });
             document
                 .getElementById("ctrl-secs")
                 .addEventListener("input", (e) => {
