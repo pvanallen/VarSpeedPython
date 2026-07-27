@@ -38,10 +38,10 @@ This Python library is descended from the VarspeedServo library (https://github.
 
 ## Installation
 
-**Computer** — For a simple setup, place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in your working directory. Or, install in editable mode from the repo:
+**Computer** — Place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in your working directory. Or, clone the repo and add `varspeed/` to your Python path:
 
 ```bash
-pip install -e .
+export PYTHONPATH="/path/to/VarSpeedPython/varspeed"
 ```
 
 **Device with CircuitPython** — place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
@@ -52,7 +52,7 @@ pip install -e .
 
 ```python
 import asyncio
-from varspeed.varspeed_async import Vspeed
+from varspeed_async import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -70,10 +70,10 @@ asyncio.run(main())
 
 ## Quick Start (sync)
 
-Uses `varspeed.py` — requires `from varspeed.varspeed import Vspeed`
+Uses `varspeed.py` — requires `from varspeed import Vspeed`
 
 ```python
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -118,7 +118,7 @@ Creates and initializes a Vspeed object.
 ### move
 ```python
 # sync only — varspeed.py
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start = 0.0):
 ```
@@ -143,7 +143,7 @@ Generates a series of values that transition from the current position to a new_
 **async only** — requires `varspeed_async.py`
 
 ```python
-from varspeed.varspeed_async import Vspeed
+from varspeed_async import Vspeed
 
 async for position, running, changed in vs.move(new_position, time_secs, steps, easing):
     ...
@@ -243,8 +243,8 @@ nothing
 
 ### map_range
 ```python
-from varspeed.varspeed import map_range        # sync
-from varspeed.varspeed_async import map_range  # async
+from varspeed import map_range        # sync
+from varspeed_async import map_range  # async
 
 map_range(value, in_min, in_max, out_min, out_max, result="float")
 ```
@@ -293,7 +293,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 ### Async examples
 
-**async only** — requires `varspeed_async.py` (`from varspeed.varspeed_async import Vspeed`)
+**async only** — requires `varspeed_async.py` (`from varspeed_async import Vspeed`)
 
 * **[async/move_simple.py](examples/async/move_simple.py)** — minimal async move, no hardware
 * **[async/move_simple_led.py](examples/async/move_simple_led.py)** — fade an LED asynchronously
@@ -311,7 +311,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 ### Sync examples
 
-Uses `varspeed.py` (`from varspeed.varspeed import Vspeed`)
+Uses `varspeed.py` (`from varspeed import Vspeed`)
 
 * **[basic/move_simple.py](examples/basic/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **[basic/sequence_simple.py](examples/basic/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
@@ -340,7 +340,7 @@ If you have existing sync code and want to move to the async version, here is th
 
 **Before (sync):**
 ```python
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -355,7 +355,7 @@ while True:
 **After (async):**
 ```python
 import asyncio
-from varspeed.varspeed_async import Vspeed
+from varspeed_async import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 

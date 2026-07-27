@@ -1,9 +1,5 @@
 import time
-
-try:
-  from varspeed import easing_functions as ease
-except ImportError:
-  import easing_functions as ease
+import easing_functions as ease
 
 
 def map_range(value, in_min, in_max, out_min, out_max, result="float"):

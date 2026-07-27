@@ -12,12 +12,12 @@ This is the async rewrite branch of [VarSpeedPython](https://github.com/pvanalle
 a library for generating timed, eased value sequences for actuators (servos, LEDs, etc.).
 It is used in university coursework at TU Delft (Digital Interfaces course).
 
-The library lives in the `varspeed/` package folder and is installed in editable mode
-via `pip install -e .`. Always work inside the `.venv` virtual environment.
+The library files live in the `varspeed/` directory. There is no package `__init__.py` —
+files are imported directly as flat modules via PYTHONPATH. Always work inside the `.venv` virtual environment.
 
 Both sync and async versions coexist:
-- `varspeed/varspeed.py` — sync version (read-only). `from varspeed.varspeed import Vspeed`
-- `varspeed/varspeed_async.py` — async version (canonical). `from varspeed.varspeed_async import Vspeed`
+- `varspeed/varspeed.py` — sync version (read-only). `from varspeed import Vspeed`
+- `varspeed/varspeed_async.py` — async version (canonical). `from varspeed_async import Vspeed`
 - `varspeed/easing_functions.py` — shared easing library (read-only)
 
 ---
@@ -65,8 +65,8 @@ Both sync and async versions coexist:
 ### varspeed/varspeed_async.py — General Rules
 - Bugs listed below have already been fixed — do not re-fix or revert them.
 - Do not add new public methods without explicit instruction.
-- `easing_functions` must be imported as: `from varspeed import easing_functions as ease`
-  (bare `import easing_functions` will fail inside the package).
+- `easing_functions` must be imported as: `import easing_functions as ease`
+  (bare import works because PYTHONPATH points to the `varspeed/` directory).
 
 ### Easing
 - `easing_functions.py` is not to be modified unless explicitly instructed.
@@ -187,8 +187,8 @@ Use `map_range()` from the varspeed library for all sensor value conversions. Al
 `result="int"` for servo angles, `result="float"` for brightness values:
 
 ```python
-from varspeed.varspeed import map_range        # sync
-from varspeed.varspeed_async import map_range  # async
+from varspeed import map_range        # sync
+from varspeed_async import map_range  # async
 
 angle = map_range(analog_in.value, 0, 65535, 0, 180, result="int")
 ```
@@ -228,8 +228,8 @@ never be copied into the examples folders — examples import from the installed
 
 - Never touch any existing file in `examples/basic/`. They are read-only.
 - Async examples live in `examples/async/` — already created, modify only if instructed.
-- All async examples import with `from varspeed.varspeed_async import Vspeed`.
-- All sync examples import with `from varspeed.varspeed import Vspeed`.
+- All async examples import with `from varspeed_async import Vspeed`.
+- All sync examples import with `from varspeed import Vspeed`.
 - Each async example must open with a comment block stating:
   1. What it demonstrates
   2. A one-line note pointing to the equivalent sync example
@@ -282,15 +282,13 @@ never be copied into the examples folders — examples import from the installed
 
 ## Development Setup
 
-The following setup is required due to a Python 3.12 / pyenv editable install issue.
 Do this once after cloning the repo:
 
 ```bash
 pyenv global 3.12.5
 python -m venv .venv
 source .venv/bin/activate
-pip install -e . --config-settings editable_mode=compat
-echo 'export PYTHONPATH="/Users/phil/Documents/GitHub/VarSpeedPython"' >> .venv/bin/activate
+echo 'export PYTHONPATH="/Users/phil/Documents/GitHub/VarSpeedPython/varspeed"' >> .venv/bin/activate
 deactivate && source .venv/bin/activate
 ```
 

@@ -3,7 +3,7 @@
 # a non-hardware dependent example of using the VarSpeedPython class
 # to have a series of moves in a sequence
 #
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 MIN = 0.0
 MAX = 100.0

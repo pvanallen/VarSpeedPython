@@ -1,10 +1,6 @@
 import asyncio
 import time
-
-try:
-    from varspeed import easing_functions as ease
-except ImportError:
-    import easing_functions as ease
+import easing_functions as ease
 
 
 # Async version of Vspeed. Key differences from varspeed.py:

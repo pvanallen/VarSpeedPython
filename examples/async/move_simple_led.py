@@ -11,7 +11,7 @@ import asyncio
 import board
 import pwmio
 
-from varspeed.varspeed_async import Vspeed
+from varspeed_async import Vspeed
 
 MIN = 0
 MAX = 65535  # higher than 55000 isn't noticeably brighter for most LEDs

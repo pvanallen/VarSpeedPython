@@ -3,7 +3,7 @@
 These examples use the async version of VarSpeedPython (`varspeed/varspeed_async.py`).
 
 ```python
-from varspeed.varspeed_async import Vspeed
+from varspeed_async import Vspeed
 ```
 
 All examples require Python 3.9+ (CPython) or CircuitPython with `adafruit_asyncio` v3+.

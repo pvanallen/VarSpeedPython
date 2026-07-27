@@ -6,7 +6,7 @@ import board
 import pwmio
 import time
 
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 MIN = 0
 MAX = 65535

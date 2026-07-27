@@ -4,7 +4,7 @@
 #
 import time
 
-from varspeed.varspeed import Vspeed
+from varspeed import Vspeed
 
 MIN = 0.0
 MAX = 100.0

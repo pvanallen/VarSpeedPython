@@ -6,7 +6,7 @@ import board
 import pwmio
 from adafruit_motor import servo
 
-from varspeed.varspeed_async import Vspeed, map_range
+from varspeed_async import Vspeed, map_range
 
 # --- constants ---
 SERVO_MIN = 0
