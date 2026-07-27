@@ -1,4 +1,4 @@
-# VarSpeedPython library #
+# VarSpeedPython library — v2.0 #
 
 ## Description
 
