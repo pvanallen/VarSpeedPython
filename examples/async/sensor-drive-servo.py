@@ -5,7 +5,7 @@ import board
 import pwmio
 from adafruit_motor import servo
 
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed, map_range
 
 state = {}
 SERVO_MIN = 0
@@ -14,13 +14,6 @@ SENSOR_MIN = 0
 SENSOR_MAX = 65535
 POLL_INTERVAL = 0.05
 RUN_TIME = 30
-
-
-def map_range(value, in_min, in_max, out_min, out_max, result):
-    value = (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-    if result == "int":
-        return round(value)
-    return float(value)
 
 
 async def init():

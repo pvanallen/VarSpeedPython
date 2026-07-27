@@ -16,8 +16,8 @@ The library lives in the `varspeed/` package folder and is installed in editable
 via `pip install -e .`. Always work inside the `.venv` virtual environment.
 
 Both sync and async versions coexist:
-- `varspeed/varspeed.py` — async version (canonical). `from varspeed import Vspeed`
-- `varspeed/varspeed_basic.py` — sync version (read-only). `from varspeed.varspeed_basic import Vspeed`
+- `varspeed/varspeed.py` — sync version (read-only). `from varspeed.varspeed import Vspeed`
+- `varspeed/varspeed_async.py` — async version (canonical). `from varspeed.varspeed_async import Vspeed`
 - `varspeed/easing_functions.py` — shared easing library (read-only)
 
 ---
@@ -62,7 +62,7 @@ Both sync and async versions coexist:
 
 ## Code Quality Rules
 
-### varspeed/varspeed.py — General Rules
+### varspeed/varspeed_async.py — General Rules
 - Bugs listed below have already been fixed — do not re-fix or revert them.
 - Do not add new public methods without explicit instruction.
 - `easing_functions` must be imported as: `from varspeed import easing_functions as ease`
@@ -200,8 +200,8 @@ angle = map_range(analog_in.value, 0, 65535, 0, 180, result="int")
 ```
 varspeed/
     __init__.py             ← exposes Vspeed from varspeed.py via `from varspeed import Vspeed`
-    varspeed.py             ← async version (canonical). READ-WRITE.
-    varspeed_basic.py       ← sync version (original). READ-ONLY.
+    varspeed.py             ← sync version (original). READ-ONLY.
+    varspeed_async.py       ← async version (canonical). READ-WRITE.
     easing_functions.py     ← shared easing library. READ-ONLY.
 rsensor.py                  ← Rsensor class and map_range utility
 examples/                   ← existing sync examples. READ-ONLY. Do not touch.
@@ -214,13 +214,13 @@ pyproject.toml              ← do not modify
 .venv/                      ← virtual environment, not committed to git
 ```
 
-`varspeed/varspeed_basic.py` must never be modified. If you find a bug in it,
+`varspeed/varspeed.py` must never be modified. If you find a bug in it,
 report it in a comment — do not fix it.
 
 Existing files in `examples/basic/` are read-only.
 Do not move, rename, or reorganize them.
 
-Library files (`easing_functions.py`, `varspeed.py`, `varspeed_basic.py`) must
+Library files (`easing_functions.py`, `varspeed.py`, `varspeed_async.py`) must
 never be copied into the examples folders — examples import from the installed package.
 
 ---
@@ -229,8 +229,8 @@ never be copied into the examples folders — examples import from the installed
 
 - Never touch any existing file in `examples/basic/`. They are read-only.
 - Async examples live in `examples/async/` — already created, modify only if instructed.
-- All async examples import with `from varspeed import Vspeed`.
-- All sync examples import with `from varspeed.varspeed_basic import Vspeed`.
+- All async examples import with `from varspeed.varspeed_async import Vspeed`.
+- All sync examples import with `from varspeed.varspeed import Vspeed`.
 - Each async example must open with a comment block stating:
   1. What it demonstrates
   2. A one-line note pointing to the equivalent sync example

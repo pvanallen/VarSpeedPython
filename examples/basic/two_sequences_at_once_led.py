@@ -6,7 +6,7 @@ import board
 import digitalio
 import pwmio
 import time
-from varspeed_basic import Vspeed
+from varspeed.varspeed import Vspeed
 
 MIN = 0
 # max = 65535 # the brightest it can go

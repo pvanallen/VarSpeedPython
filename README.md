@@ -16,9 +16,9 @@ This Python library is descended from the VarspeedServo library (https://github.
 
 > **Sync vs Async — which should I use?**
 >
-> **Sync** (`varspeed_basic.py`): best for beginners, existing curriculum, or CircuitPython without asyncio. Simple event-loop style — call `move()` on every loop iteration.
+> **Sync** (`varspeed.py`): best for beginners, existing curriculum, or CircuitPython without asyncio. Simple event-loop style — call `move()` on every loop iteration.
 >
-> **Async** (`varspeed.py`): use when you need concurrent actuators (e.g. a servo and an LED moving independently at the same time), or when you want to learn `async/await` patterns. Requires Python 3.9+ or CircuitPython with `adafruit_asyncio` v3+.
+> **Async** (`varspeed_async.py`): use when you need concurrent actuators (e.g. a servo and an LED moving independently at the same time), or when you want to learn `async/await` patterns. Requires Python 3.9+ or CircuitPython with `adafruit_asyncio` v3+.
 
 ---
 
@@ -44,7 +44,7 @@ This Python library is descended from the VarspeedServo library (https://github.
 pip install -e .
 ```
 
-**Device with CircuitPython** — place `varspeed/varspeed.py` and `varspeed/easing_functions.py` in the `CIRCUITPY/lib/` directory, along with the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
+**Device with CircuitPython** — place `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` in the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
 
 ---
 
@@ -52,7 +52,7 @@ pip install -e .
 
 ```python
 import asyncio
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -70,10 +70,10 @@ asyncio.run(main())
 
 ## Quick Start (sync)
 
-Uses `varspeed_basic.py` — requires `varspeed_basic import Vspeed`
+Uses `varspeed.py` — requires `from varspeed.varspeed import Vspeed`
 
 ```python
-from varspeed_basic import Vspeed
+from varspeed.varspeed import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -117,8 +117,8 @@ Creates and initializes a Vspeed object.
 
 ### move
 ```python
-# sync only — varspeed_basic.py
-from varspeed_basic import Vspeed
+# sync only — varspeed.py
+from varspeed.varspeed import Vspeed
 
 def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start = 0.0):
 ```
@@ -140,10 +140,10 @@ Generates a series of values that transition from the current position to a new_
 ---
 
 ### move (async)
-**async only** — requires `varspeed.py`
+**async only** — requires `varspeed_async.py`
 
 ```python
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed
 
 async for position, running, changed in vs.move(new_position, time_secs, steps, easing):
     ...
@@ -166,7 +166,7 @@ Same as `move()` above (`new_position`, `time_secs`, `steps`, `easing`, `delay_s
 def sequence(self, sequence, loop_max = 1):
 ```
 
-Creates a series of values in a sequence of moves as specified in the sequence array. In the async version (`varspeed.py`), this is an async iterator used with `async for`. In the sync version (`varspeed_basic.py`), call it repeatedly from your event loop.
+Creates a series of values in a sequence of moves as specified in the sequence array. In the async version (`varspeed_async.py`), this is an async iterator used with `async for`. In the sync version (`varspeed.py`), call it repeatedly from your event loop.
 
 #### Args
 * **sequence** (array of tuples) : perform a sequence of moves — each tuple is `(position, time_secs, steps, easing[, delay_start])`.
@@ -243,7 +243,7 @@ nothing
 
 ### map_range
 ```python
-from varspeed import map_range
+from varspeed.varspeed_async import map_range
 
 map_range(value, in_min, in_max, out_min, out_max, result="float")
 ```
@@ -292,7 +292,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 ### Async examples
 
-**async only** — requires `varspeed.py` (`from varspeed import Vspeed`)
+**async only** — requires `varspeed_async.py` (`from varspeed.varspeed_async import Vspeed`)
 
 * **[async/move_simple.py](examples/async/move_simple.py)** — minimal async move, no hardware
 * **[async/move_simple_led.py](examples/async/move_simple_led.py)** — fade an LED asynchronously
@@ -309,7 +309,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 ### Sync examples
 
-Uses `varspeed_basic.py` (`from varspeed_basic import Vspeed`)
+Uses `varspeed.py` (`from varspeed.varspeed import Vspeed`)
 
 * **[basic/move_simple.py](examples/basic/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **[basic/sequence_simple.py](examples/basic/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
@@ -325,7 +325,7 @@ Uses `varspeed_basic.py` (`from varspeed_basic import Vspeed`)
 
 To set up on a CircuitPython hardware device:
 
-* Put `varspeed/varspeed.py` in the **lib** directory on CIRCUITPY (async version) **or** `varspeed/varspeed_basic.py` (sync version)
+* Put `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) in the **lib** directory on CIRCUITPY
 * Put `varspeed/easing_functions.py` in the **lib** directory on CIRCUITPY
 * Put the asyncio library from the [CircuitPython Library bundle](https://circuitpython.org/libraries) in the **lib** directory on CIRCUITPY
 * Copy the python code from any of the examples into `code.py` or `main.py` at the top of CIRCUITPY
@@ -338,7 +338,7 @@ If you have existing sync code and want to move to the async version, here is th
 
 **Before (sync):**
 ```python
-from varspeed_basic import Vspeed
+from varspeed.varspeed import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 
@@ -353,7 +353,7 @@ while True:
 **After (async):**
 ```python
 import asyncio
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed
 
 vs = Vspeed(init_position=0, result="int")
 

@@ -14,7 +14,7 @@
 
 import asyncio
 
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed
 
 vs_a = Vspeed(init_position=0,   result="float", debug=False)
 vs_b = Vspeed(init_position=100, result="float", debug=False)

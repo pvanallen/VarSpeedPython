@@ -12,7 +12,7 @@ import board
 import pwmio
 from adafruit_motor import servo
 
-from varspeed import Vspeed
+from varspeed.varspeed_async import Vspeed
 
 SERVO_MIN = 0
 SERVO_MAX = 180
