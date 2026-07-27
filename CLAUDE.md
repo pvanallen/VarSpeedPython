@@ -178,7 +178,6 @@ async def init():
 
 ### Naming conventions
 - `vs` — Vspeed instance
-- `rs` — Rsensor instance
 - `task_<noun>` — task variables: `task_servo`, `task_sensor`, `task_display`
 - Helper coroutines: `run_actuator`, `run_sequence` — not `run_servo`, `run_motor`, `run_led`
 - Constants: ALL_CAPS at module level
@@ -204,7 +203,6 @@ varspeed/
     varspeed.py             ← sync version (original). READ-ONLY.
     varspeed_async.py       ← async version (canonical). READ-WRITE.
     easing_functions.py     ← shared easing library. READ-ONLY.
-rsensor.py                  ← Rsensor class and map_range utility
 examples/                   ← existing sync examples. READ-ONLY. Do not touch.
 examples/basic/             ← sync examples.
 examples/async/             ← async examples. Already created.
@@ -344,6 +342,6 @@ indent-width = 2
 - Auto-commit
 - Modify the university tutorial page or any external resources
 - Create the tutorial app UI until the library and examples are stable and reviewed
-- Add sensor-reading functionality to either library file — sensor support lives in `rsensor.py` only
+- Add sensor-reading functionality to either library file
 - Use `asyncio.gather()` in examples — use `create_task()` instead
 - Reformat indentation from 2 spaces to 4 spaces
