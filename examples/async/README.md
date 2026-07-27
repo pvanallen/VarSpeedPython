@@ -1,6 +1,6 @@
 # Async Examples
 
-These examples use the async version of VarSpeedPython (`varspeed/varspeed.py`).
+These examples use the async version of VarSpeedPython (`varspeed/varspeed_async.py`).
 
 ```python
 from varspeed.varspeed_async import Vspeed
@@ -28,5 +28,7 @@ python examples/async/move_simple.py
 | `concurrent_actuators.py` | Two actuators, different speeds and easings |
 | `concurrent_sequences.py` | Servo and LED each running their own sequence |
 | `move_servo_and_led.py` | Servo and LED moving simultaneously |
+| `sensor-drive-servo.py` | Read an analog sensor and drive a servo concurrently |
+| `sensor-determine-sequence.py` | Use a sensor reading to select and run a varspeed sequence |
 
 See the sync equivalents in `examples/basic/` for comparison.
