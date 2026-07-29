@@ -1,5 +1,11 @@
 # VarSpeedPython library — v2.0 #
+**Release Notes**: 2.0.0 implements the following changes:
 
+* **async version:** Added a new version of the library (varspeed_async.py) that makes the library async compatible. For backward compatibility, the old sync version is still available as varspeed.py. Corresponding sync and async examples are included.
+* **map_range():** Added a new utility function [**map_range()**](#map_range) that maps one value range to another. Useful for example in the case where an output requires a range of 0-180, and a sensor controlling that output returns in a range of zero to one.
+* **easing cheatsheet:** New easing [cheatsheet](https://philvanallen.com/easings_cheatsheet/) that correctly matches the library's easing function names. This new version (inspired by, and adapted from the [old one](https://easings.net). This new version shows a simple animation of a servo using that easing function), allows the user to change the target position, the number of steps, and the length of the move. Plus, the call needed for those parameters is displayed under the diagram.
+* **Examples:** The examples for both sync and async libraries have been updated to be more consistent. There are also more async examples now to cover more use cases.
+* **Documentation** Updated documention covering async and other improvements
 ## Description
 
 The library is designed for projects that need to control values over time. For example: setting the new angle of a servo in 3.0 seconds; setting the brightness of an LED by fading up in 2.5 seconds; or moving a graphic on a screen. You can set the amount of time for a change in value, and apply easing to each move to make it seem more natural.
@@ -25,8 +31,8 @@ This Python library is descended from the VarspeedServo library (https://github.
 <!-- TOC START min:2 max:2 link:true asterisk:false update:true -->
 - [Description](#description)
 - [Installation](#installation)
-- [Quick Start (async — start here)](#quick-start-async--start-here)
-- [Quick Start (sync)](#quick-start-sync)
+- [Quick Start (**async** — start here)](#quick-start-async--start-here)
+- [Quick Start (**sync** — start here)](#quick-start-sync)
 - [API Reference](#api-reference)
 - [Easing Types](#easing-types)
 - [Examples](#examples)
@@ -62,11 +68,13 @@ echo 'export PYTHONPATH="/path/to/VarSpeedPython/varspeed"' >> .venv/bin/activat
 deactivate && source .venv/bin/activate
 ```
 
-**Device with CircuitPython** — Copy `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` into the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
+**Device with CircuitPython** — Copy `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` into the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` lib folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
 
 ---
 
 ## Quick Start (async — start here)
+
+**Uses `varspeed_async.py` — requires: `from varspeed_async import Vspeed`**
 
 ```python
 import asyncio
@@ -88,7 +96,7 @@ asyncio.run(main())
 
 ## Quick Start (sync)
 
-Uses `varspeed.py` — requires `from varspeed import Vspeed`
+**Uses `varspeed.py` — requires: `from varspeed import Vspeed`**
 
 ```python
 from varspeed import Vspeed
@@ -313,8 +321,10 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 **async only** — requires `varspeed_async.py` (`from varspeed_async import Vspeed`)
 
+#### No Hardware
 * **[async/move_simple.py](examples/async/move_simple.py)** — minimal async move, no hardware
 * **[async/move_simple_led.py](examples/async/move_simple_led.py)** — fade an LED asynchronously
+#### Hardware Dependent
 * **[async/move_simple_servo.py](examples/async/move_simple_servo.py)** — move a servo asynchronously
 * **[async/sequence_simple.py](examples/async/sequence_simple.py)** — run a sequence asynchronously, no hardware
 * **[async/sequence_simple_servo.py](examples/async/sequence_simple_servo.py)** — sequence of servo moves
@@ -331,8 +341,10 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 
 Uses `varspeed.py` (`from varspeed import Vspeed`)
 
+#### No Hardware
 * **[basic/move_simple.py](examples/basic/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **[basic/sequence_simple.py](examples/basic/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
+#### Hardware Dependent
 * **[basic/move_simple_led.py](examples/basic/move_simple_led.py)** — changes the brightness of an LED
 * **[basic/move_simple_servo.py](examples/basic/move_simple_servo.py)** — changes the angle of a servo
 * **[basic/sequence_simple_servo.py](examples/basic/sequence_simple_servo.py)** — runs a sequence of moves for a servo
