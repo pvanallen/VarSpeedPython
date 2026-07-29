@@ -68,7 +68,7 @@ echo 'export PYTHONPATH="/path/to/VarSpeedPython/varspeed"' >> .venv/bin/activat
 deactivate && source .venv/bin/activate
 ```
 
-**Device with CircuitPython** — Copy `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` into the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` lib folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries).
+**Device with CircuitPython** — Copy `varspeed/varspeed.py` (sync) or `varspeed/varspeed_async.py` (async) and `varspeed/easing_functions.py` into the `CIRCUITPY/lib/` directory. For the async version also add the `asyncio` lib folder from the [Adafruit CircuitPython bundle](https://circuitpython.org/libraries). **asyncio Requires CircuitPython v8+.**
 
 ---
 
@@ -141,9 +141,9 @@ Creates and initializes a Vspeed object.
 
 ---
 
-### move
+### move (sync)
+**sync only** — requires `varspeed.py`
 ```python
-# sync only — varspeed.py
 from varspeed import Vspeed
 
 def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start = 0.0):
@@ -286,7 +286,7 @@ Maps a value from one range to another. Useful for converting sensor readings to
 * **result** (string) : `"int"` to return a rounded integer, `"float"` for a float (default)
 
 #### Returns
-* **int or float** : the mapped value in the output range
+* **int or float** : the mapped value in the output range as a rounded int or float
 
 ---
 
@@ -324,7 +324,7 @@ Easing names in this library start with the family name (e.g. `Linear`, `Quad`, 
 #### No Hardware
 * **[async/move_simple.py](examples/async/move_simple.py)** — minimal async move, no hardware
 * **[async/move_simple_led.py](examples/async/move_simple_led.py)** — fade an LED asynchronously
-#### Hardware Dependent
+#### Hardware Dependent with CircuitPython
 * **[async/move_simple_servo.py](examples/async/move_simple_servo.py)** — move a servo asynchronously
 * **[async/sequence_simple.py](examples/async/sequence_simple.py)** — run a sequence asynchronously, no hardware
 * **[async/sequence_simple_servo.py](examples/async/sequence_simple_servo.py)** — sequence of servo moves
@@ -344,7 +344,7 @@ Uses `varspeed.py` (`from varspeed import Vspeed`)
 #### No Hardware
 * **[basic/move_simple.py](examples/basic/move_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
 * **[basic/sequence_simple.py](examples/basic/sequence_simple.py)** — a non-CircuitPython dependent example that can be run in any Python environment
-#### Hardware Dependent
+#### Hardware Dependent with CircuitPython
 * **[basic/move_simple_led.py](examples/basic/move_simple_led.py)** — changes the brightness of an LED
 * **[basic/move_simple_servo.py](examples/basic/move_simple_servo.py)** — changes the angle of a servo
 * **[basic/sequence_simple_servo.py](examples/basic/sequence_simple_servo.py)** — runs a sequence of moves for a servo
@@ -353,7 +353,7 @@ Uses `varspeed.py` (`from varspeed import Vspeed`)
 
 ---
 
-## Circuit Python Setup
+## CircuitPython Setup
 
 To set up on a CircuitPython hardware device:
 
@@ -390,6 +390,7 @@ from varspeed_async import Vspeed
 vs = Vspeed(init_position=0, result="int")
 
 async def main():
+    # iterate over the move() call
     async for position, running, changed in vs.move(
         new_position=100, time_secs=2.0, steps=20, easing="SineEaseInOut"
     ):
