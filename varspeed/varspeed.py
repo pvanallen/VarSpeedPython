@@ -60,6 +60,7 @@ class Vspeed():
     self.seq_old = []
     self.seq_loop_max = 1
     self.seq_loop_count = 0
+    self.move_start_time = 0
     self.debug = debug
 
   def move(self, new_position = 0, time_secs = 2.0, steps = 20, easing = "LinearInOut", delay_start=0.0):
@@ -94,31 +95,32 @@ class Vspeed():
       self.ease = self.easing_method(start=self.position, end=self.new_position, duration=steps)
       self.delay_start = delay_start
       self.delay_start_complete = False
+      self.move_start_time = None
+      if delay_start == 0.0:
+        self.delay_start_complete = True
+        self.move_start_time = self.start_time
       if self.debug: print("Delaying move by",self.delay_start,"secs")
 
     changed = False
     running = True
     self.started = True
 
-    diff_time = time.monotonic() - self.start_time
-    if diff_time >= self.delay_start and self.delay_start_complete == False:
-      self.delay_start_complete = True
-    diff_time = time.monotonic() - self.start_time
-    if diff_time > self.step_delay and self.delay_start_complete:
-      # time to change
-      self.step += 1
-      # if self.debug: print("new step " ,self.step,diff_time,self.step_delay)
-      self.start_time = time.monotonic()
-      self.position = self.ease(self.step)
-      # are we there yet?
-      if self.step >= self.steps:
-        #force to the desired final position
-        self.position = self.new_position
-        running = False
-        self.started = False
-        # print("end of MOVE")
-    else:
-      changed = True
+    now = time.monotonic()
+    if not self.delay_start_complete:
+      if now - self.start_time >= self.delay_start:
+        self.delay_start_complete = True
+        self.move_start_time = now
+
+    if self.delay_start_complete:
+      elapsed = now - self.move_start_time
+      new_step = min(int(elapsed / self.step_delay), self.steps)
+      if new_step > self.step:
+        self.step = new_step
+        self.position = self.ease(self.step)
+        if self.step >= self.steps:
+          self.position = self.new_position
+          running = False
+          self.started = False
 
     # restrict the output to integer if needed (e.g. for a servo)
     position = self.position
