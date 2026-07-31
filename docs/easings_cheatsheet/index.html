@@ -275,23 +275,31 @@
         <header>
             <h1>VarSpeedPython — Easing Functions</h1>
             <p>
-                Hover a card to preview the motion. Use the name shown as the
-                <code>easing</code> parameter in <code>move()</code> and
-                <code>sequence()</code>.<br />
-                All names match the class names in
-                <a
-                    href="https://github.com/pvanallen/VarSpeedPython/blob/master/varspeed/easing_functions.py"
-                    target="_blank"
-                    rel="noopener"
-                    ><code>easing_functions.py</code></a
-                >, part of the
+                This cheatsheet shows all of the easing functions provided in the
                 <a
                     href="https://github.com/pvanallen/VarSpeedPython"
                     target="_blank"
                     rel="noopener"
                     >VarSpeedPython</a
                 >
-                library.
+                library. They are drawn from the original
+                <a href="https://robertpenner.com/easing/" target="_blank" rel="noopener"
+                    >Penner's easings</a
+                >, with the addition of gamma functions for lighting. Mouse over or
+                click/touch an easing card to see an animation of using the
+                corresponding easing function.<br /><br />
+            </p>
+            <p>
+                Use the name shown as the
+                <code>easing</code> parameter in <code>move()</code> or
+                <code>sequence()</code>.<br /><br />
+                All names match the class names in
+                <a
+                    href="https://github.com/pvanallen/VarSpeedPython/blob/master/varspeed/easing_functions.py"
+                    target="_blank"
+                    rel="noopener"
+                    ><code>easing_functions.py</code></a
+                >, part of the VarSpeedPython library.<br /><br />
             </p>
             <p>
                 Visualization inspired by
@@ -856,17 +864,27 @@
                 function frame(ts) {
                     if (t0 === null) t0 = ts;
                     const easeDur = animSecs * 1000;
-                    const animDur = easeDur + PAUSE_DURATION;
+                    const halfPause = PAUSE_DURATION / 2;
+                    const animDur = easeDur + halfPause + easeDur + halfPause;
                     const elapsed = (ts - t0) % animDur;
                     let v;
                     if (elapsed < easeDur) {
-                        // Snap t to discrete step boundaries — simulates the library's actual steps
+                        // Forward: eased move
                         const rawT = elapsed / easeDur;
                         const snappedT =
                             Math.floor(rawT * animSteps) / animSteps;
                         v = fn(Math.min(1, snappedT));
-                    } else {
+                    } else if (elapsed < easeDur + halfPause) {
+                        // Pause at end position
                         v = 1;
+                    } else if (elapsed < 2 * easeDur + halfPause) {
+                        // Return: same easing reversed
+                        const returnRawT = (elapsed - easeDur - halfPause) / easeDur;
+                        const returnSnappedT = Math.floor(returnRawT * animSteps) / animSteps;
+                        v = 1 - fn(Math.min(1, returnSnappedT));
+                    } else {
+                        // Pause at start position
+                        v = 0;
                     }
                     const usable = track.clientHeight - 14;
                     ball.style.bottom = (v * usable).toFixed(1) + "px";
