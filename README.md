@@ -292,7 +292,7 @@ Maps a value from one range to another. Useful for converting sensor readings to
 
 ## Easing Types
 
-For any move (even within a sequence), you can set an easing function using any of the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://philvanallen.com/easings_cheatsheet/](https://philvanallen.com/easings_cheatsheet/). 
+For any move (even within a sequence), you can set an easing function using any of the following classic Robert Penner easing types. For an animated and graphed visualization of each easing type, see [https://pvanallen.github.io/VarSpeedPython/docs/easings_cheatsheet/](https://pvanallen.github.io/VarSpeedPython/docs/easings_cheatsheet/). 
 
 For an explanation of the use of easing, see this article: [Animation Principles in UI Design: Understanding Easing](https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3)
 
