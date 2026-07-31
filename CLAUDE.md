@@ -16,7 +16,7 @@ The library files live in the `varspeed/` directory. There is no package `__init
 files are imported directly as flat modules via PYTHONPATH. Always work inside the `.venv` virtual environment.
 
 Both sync and async versions coexist:
-- `varspeed/varspeed.py` — sync version (read-only). `from varspeed import Vspeed`
+- `varspeed/varspeed.py` — sync version (read-write). `from varspeed import Vspeed`
 - `varspeed/varspeed_async.py` — async version (canonical). `from varspeed_async import Vspeed`
 - `varspeed/easing_functions.py` — shared easing library (read-only)
 
@@ -200,7 +200,7 @@ angle = map_range(analog_in.value, 0, 65535, 0, 180, result="int")
 ```
 varspeed/
     __init__.py             ← exposes Vspeed from varspeed.py via `from varspeed import Vspeed`
-    varspeed.py             ← sync version (original). READ-ONLY.
+    varspeed.py             ← sync version. READ-WRITE.
     varspeed_async.py       ← async version (canonical). READ-WRITE.
     easing_functions.py     ← shared easing library. READ-ONLY.
 examples/                   ← existing sync examples. READ-ONLY. Do not touch.
@@ -213,8 +213,7 @@ pyproject.toml              ← do not modify
 .venv/                      ← virtual environment, not committed to git
 ```
 
-`varspeed/varspeed.py` must never be modified. If you find a bug in it,
-report it in a comment — do not fix it.
+`varspeed/varspeed.py` may be modified. Fix bugs and make improvements as needed.
 
 Existing files in `examples/basic/` are read-only.
 Do not move, rename, or reorganize them.
